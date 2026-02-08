@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mapan.feb.undip.ac.id/sitemap.xml
