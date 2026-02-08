@@ -1,0 +1,496 @@
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px; /* Lebar sidebar */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.navbar {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+  .sidebar {
+    transform: translateX(-100%);
+  }
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+  margin-bottom: 25px;
+  border: 1px solid var(--border-color);
+}
+
+.breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text-main);
+  margin-top: 5px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-icon-btn {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-left: 1px solid var(--border-color);
+  padding-left: 20px;
+}
+
+.admin-name {
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.admin-role {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.logout-btn {
+  background: var(--danger);
+  color: white;
+  padding: 8px 15px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px; /* Sesuai lebar sidebar */
+  padding: 25px 30px;
+  transition: all 0.3s ease;
+}
+
+.content-body {
+  margin-top: 20px;
+}
+
+/* Responsif buat HP */
+@media (max-width: 992px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* Container Profil */
+.admin-profile-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-main);
+  padding: 6px 6px 6px 15px;
+  border-radius: 50px; /* Bikin lonjong biar elegan */
+  border: 1px solid var(--border-color);
+}
+
+.admin-info-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-avatar-circle {
+  width: 32px;
+  height: 32px;
+  background: var(--bg-card);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.admin-text-details {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.admin-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.admin-role {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* TOMBOL LOGOUT BIAR GAK JELEK */
+.logout-icon-btn {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%; /* Bulat sempurna */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
+}
+
+.logout-icon-btn:hover {
+  background: #ff1a1a;
+  transform: rotate(90deg); /* Animasi dikit biar asik */
+  box-shadow: 0 6px 15px rgba(255, 77, 77, 0.5);
+}
+
+/* Nav Icon Button (Dark Mode) */
+.nav-icon-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-icon-btn:hover {
+  background: var(--bg-main);
+  transform: translateY(-2px);
+}
+
+.user-avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover; /* Biar foto gak ketarik/gepeng */
+  border: 2px solid var(--border-color);
+}
+
+/* Biar inisial nama tetep konsisten ukurannya sama foto */
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0; /* Biar gak ciut kalo teks namanya panjang */
+}
+
+/* Efek Hover di Tabel */
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.clickable-row:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* Styling Avatar Image di Tabel */
+.user-avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+}
+
+/* Modal Detail Specific */
+.detail-modal {
+  width: 500px !important;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.detail-profile {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+.detail-profile img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 3px solid var(--primary);
+  padding: 3px;
+}
+.detail-profile h4 {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+.info-item label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+}
+.info-item p {
+  margin: 5px 0 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-main);
+}
+.capitalize {
+  text-transform: capitalize;
+}
+
+.reset-password-section {
+  background: rgba(0, 0, 0, 0.02);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px dashed var(--border-color);
+}
+.reset-password-section h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--text-main);
+}
+.flex-gap {
+  display: flex;
+  gap: 10px;
+}
+.flex-gap input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: white;
+}
+
+/* --- CUSTOM SCROLLBAR --- */
+/* Untuk Chrome, Safari, dan Edge */
+.table-wrapper::-webkit-scrollbar {
+  width: 6px; /* Lebar scrollbar vertikal */
+  height: 6px; /* Tinggi scrollbar horizontal */
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: var(--bg-main); /* Warna dasar track */
+  border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #d1d5db; /* Warna bar-nya */
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--primary); /* Berubah warna pas di-hover */
+}
+
+/* Untuk Firefox */
+.table-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db var(--bg-main);
+}
+
+/* Tambahan: Pastikan table-wrapper punya overflow */
+.table-wrapper {
+  overflow: auto;
+  max-height: 70vh; /* Opsional: Biar tabel ada batas tingginya dan scroll muncul */
+}
+
+.table-card::-webkit-scrollbar {
+  display: none;
+}
+/* Container Utama Full Screen */
+.login-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Kartu Login Putih Bersih */
+.login-card {
+  background: white;
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-header h1 {
+  color: #4318ff; /* Warna Primary lu */
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.login-header p {
+  color: #a3aed0;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Form Styling */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Jarak antar input pas */
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.input-group label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2b3674;
+  margin-left: 4px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #d0d5dd;
+  outline: none;
+  font-size: 16px; /* Biar gak auto-zoom di iPhone */
+  transition: 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #4318ff;
+  box-shadow: 0 0 0 3px rgba(67, 24, 255, 0.1);
+}
+
+/* Button Lu Bre */
+.btn-login {
+  margin-top: 10px;
+  width: 100%;
+  padding: 12px !important;
+  font-weight: 700 !important;
+}
+
+/* Tambahin ini di file CSS lu Bre */
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content .input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-main); /* Biar kontras sama kartu putih */
+  color: var(--text-main);
+  outline: none;
+  transition: 0.2s;
+}
+
+.modal-content .input-group input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 24, 255, 0.1);
+}
+
+.modal-content .input-group label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+/* Biar scrollbar modal tipis */
+.modal-content::-webkit-scrollbar {
+  width: 4px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}

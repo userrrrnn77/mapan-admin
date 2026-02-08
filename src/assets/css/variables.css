@@ -1,0 +1,237 @@
+:root {
+  /* Colors */
+  --primary: #4630eb;
+  --primary-dark: #3521b5;
+  --bg-main: #f4f7fe;
+  --bg-card: #ffffff;
+  --bg-sidebar: #4630eb;
+  --text-main: #2b3674;
+  --text-muted: #a3aed0;
+  --border-color: #e0e5f2;
+  --white: #ffffff;
+
+  /* Utils */
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow: 14px 17px 40px 4px rgba(112, 144, 176, 0.08);
+
+  /* Dropdown Specific - Light Mode */
+  --bg-dropdown: #ffffff;
+  --bg-dropdown-search: #f9fafb;
+  --bg-dropdown-hover: #4630eb; /* Pake --primary */
+  --text-dropdown: #2b3674;
+  --text-dropdown-hover: #ffffff;
+  --shadow-dropdown: 0 10px 25px rgba(112, 144, 176, 0.15);
+  
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-thumb-hover: #a8a8a8;
+}
+
+[data-theme='dark'] {
+  --bg-main: #0b1437;
+  --bg-card: #111c44;
+  --bg-sidebar: #111c44;
+  --text-main: #ffffff;
+  --text-muted: #a3aed0;
+  --border-color: #1b254b;
+  --shadow: none;
+
+  /* Dropdown Specific - Dark Mode */
+  --bg-dropdown: #111c44; /* Ikut --bg-card */
+  --bg-dropdown-search: #0b1437; /* Ikut --bg-main */
+  --bg-dropdown-hover: #4630eb;
+  --text-dropdown: #ffffff;
+  --text-dropdown-hover: #ffffff;
+  --shadow-dropdown: 0 10px 25px rgba(0, 0, 0, 0.5);
+  --border-color: #1b254b;
+
+  --scrollbar-track: #0b1437; /* Senada sama bg-main dark */
+  --scrollbar-thumb: #1b254b; /* Senada sama border dark */
+  --scrollbar-thumb-hover: #4630eb; /* Pake --primary pas di hover */
+}
+
+/* 2. LAYOUT DASAR */
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 25px 30px;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 992px) {
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* 3. SHARED COMPONENTS (Tabel & Action Bar) */
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 8px 15px;
+  border-radius: 10px;
+  flex: 1;
+  gap: 10px;
+}
+
+.search-box input {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  width: 100%;
+  outline: none;
+}
+
+.table-wrapper {
+  background: var(--bg-card);
+  border-radius: 15px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+/* Pakai satu class table aja biar kembar */
+.karyawan-table,
+.payroll-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.karyawan-table th,
+.payroll-table th {
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.02);
+  color: var(--text-muted);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.karyawan-table td,
+.payroll-table td {
+  padding: 15px;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+/* 4. PAYROLL SPECIFIC STYLE (Warna Karyawan) */
+.period-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  padding: 5px 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.period-picker input {
+  border: none;
+  background: none;
+  font-weight: bold;
+  color: var(--primary); /* Ganti dari biru muda ke warna Karyawan */
+  cursor: pointer;
+  outline: none;
+}
+
+/* Ganti Button Hitung Biar Sama Kaya Tambah Karyawan */
+.btn-primary,
+.btn-hitung {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-primary:hover,
+.btn-hitung:hover {
+  background: var(--primary-dark);
+}
+
+/* 5. MODAL & SLIP PAYROLL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  padding: 25px;
+  border-radius: 20px;
+  width: 450px;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+.slip-body {
+  text-align: left;
+  margin: 20px 0;
+  background: var(--bg-main); /* Ikut background utama */
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid var(--border-color);
+}
+
+.slip-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px dashed var(--border-color);
+  font-size: 18px;
+  color: #4caf50; /* Tetap hijau buat uang */
+}
+
+/* 6. UTILS */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.loc-badge {
+  background: var(--bg-main);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid var(--border-color);
+}
