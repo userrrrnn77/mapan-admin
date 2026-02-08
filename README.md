@@ -1,16 +1,81 @@
-# React + Vite
+# 🏢 Admin Mapan - Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistem manajemen administrasi modern berbasis dashboard untuk pengelolaan data karyawan, presensi, dan payroll secara real-time. Dibangun dengan fokus pada kecepatan performa dan antarmuka yang responsif.
 
-Currently, two official plugins are available:
+## 🚀 Fitur Utama
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Dashboard Analytics**: Visualisasi statistik data secara cepat.
+- **Manajemen Karyawan**: CRUD data karyawan dengan sistem role (Owner, Admin, Karyawan).
+- **Sistem Presensi**: Monitoring kehadiran lengkap dengan foto, lokasi (Geo-location), dan status keterlambatan.
+- **Work Location Setup**: Pengaturan radius lokasi kantor yang dinamis.
+- **Payroll System**: Perhitungan gaji otomatis dengan ekspor data ke Excel.
+- **Dark Mode Support**: Antarmuka adaptif yang nyaman di mata.
+- **Fully Responsive**: Tampilan optimal dari desktop hingga smartphone.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Core
 
-## Expanding the ESLint configuration
+- **React 19** - Library UI terbaru.
+- **Vite 7** - Build tool generasi terbaru yang super cepat.
+- **React Router 7** - Manajemen navigasi aplikasi.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### State & Data Management
+
+- **TanStack Query v5** - Sinkronisasi data server & caching yang powerfull.
+- **Axios** - HTTP Client untuk komunikasi API.
+
+### UI & Styling
+
+- **Lucide React** - Icon set yang clean dan konsisten.
+- **CSS3 (Modern Variables)** - Custom styling dengan sistem tema (Light/Dark).
+- **SweetAlert2 & React Hot Toast** - Notifikasi interaktif yang user-friendly.
+
+### Utilities
+
+- **XLSX & File-Saver** - Untuk kebutuhan ekspor data laporan.
+
+## 📦 Cara Instalasi
+
+1.  **Clone Repositori**
+
+    ```bash
+    git clone [https://github.com/username/admin-mapan.git](https://github.com/username/admin-mapan.git)
+    cd admin-mapan
+    ```
+
+2.  **Install Dependensi**
+
+    ```bash
+    npm install
+    ```
+
+3.  **Konfigurasi Environment**
+    Buat file `.env` di root folder dan sesuaikan:
+
+    ```env
+    VITE_API_URL=[https://api.lu.com](https://api.lu.com)
+    ```
+
+4.  **Jalankan Mode Development**
+
+    ```bash
+    npm run dev
+    ```
+
+5.  **Build untuk Produksi**
+    ```bash
+    npm run build
+    ```
+
+## 📂 Struktur Folder
+
+- `src/context` - State management (Auth Context).
+- `src/hooks` - Custom hooks (Theme switcher, dll).
+- `src/pages` - Halaman utama aplikasi.
+- `src/components` - Komponen UI yang reusable.
+- `src/assets` - File CSS dan gambar statis.
+
+---
+
+Made with 🔥 by Admin Mapan Team
