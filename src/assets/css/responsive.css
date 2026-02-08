@@ -1,361 +1,137 @@
-/* --- responsive.css --- */
-
-/* 1. BREAKPOINT UNTUK TABLET (Max 992px) */
+/* ============================================================
+   1. GLOBAL MOBILE RESET (Max 992px)
+   ============================================================ */
 @media (max-width: 992px) {
   .main-content {
-    margin-left: 0 !important;
+    margin-left: 0 !important; /* Sidebar jadi overlay, konten full */
     padding: 15px !important;
+    width: 100% !important;
   }
 
-  /* Sidebar jadi overlay */
-  .sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-  }
-
-  .sidebar.active {
-    transform: translateX(0);
-  }
-
-  /* Dashboard Stats jadi 2 kolom */
   .stats-grid-web {
     grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15px !important;
   }
 
-  .content-row {
-    flex-direction: column !important; /* Menu & Feed jadi atas-bawah */
-  }
-
-  .menu-section,
-  .feed-section {
-    flex: 1 !important;
-  }
-}
-
-/* 2. BREAKPOINT UNTUK HP (Max 768px) */
-@media (max-width: 768px) {
-  /* Navbar adjustment */
+  /* Navbar Adjustment */
   .navbar {
     padding: 10px 15px !important;
   }
+}
 
-  .admin-name,
-  .admin-role {
-    display: none; /* Nama admin sembunyiin aja biar gak penuh */
+/* ============================================================
+   2. TABLE TO CARD TRANSFORMATION (The "Bre" Special)
+   Target: .karyawan-table, .custom-table, .payroll-table
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Sembunyikan Header Table */
+  table thead {
+    display: none !important;
   }
 
-  /* Filter & Search Bar jadi tumpuk */
-  .action-bar,
-  .filter-group {
-    flex-direction: column !important;
-    align-items: stretch !important;
-  }
-
-  .search-box,
-  .period-picker,
-  .btn-primary,
-  .btn-export {
+  /* Baris jadi Card */
+  table,
+  tbody,
+  tr,
+  td {
+    display: block !important;
     width: 100% !important;
   }
 
-  .date-range-wrapper {
-    flex-direction: column !important;
-    align-items: stretch !important;
-  }
-
-  /* TABLE HACK: Biar gak ngerusak layout */
-  .table-wrapper {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .karyawan-table,
-  .custom-table,
-  .payroll-table {
-    min-width: 700px; /* Paksa lebar minimal biar bisa di-scroll smooth */
-  }
-
-  /* Modal biar gak lebar-lebar banget di HP */
-  .modal-content,
-  .detail-modal {
-    width: 95% !important;
-    margin: 10px;
-    padding: 15px !important;
-  }
-
-  .form-grid,
-  .info-grid {
-    grid-template-columns: 1fr !important; /* Form jadi 1 kolom */
-  }
-}
-
-/* 3. BREAKPOINT UNTUK HP KECIL (Max 480px) */
-@media (max-width: 480px) {
-  .stats-grid-web {
-    grid-template-columns: 1fr !important; /* Stats jadi 1 kolom */
-  }
-
-  .page-title {
-    font-size: 18px !important;
-  }
-
-  .menu-grid-web {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* --- RESPONSIVE ATTENDANCE STRATEGY --- */
-
-@media (max-width: 992px) {
-  .attendance-header-card {
-    padding: 15px;
-  }
-
-  /* Filter Group dibikin numpuk */
-  .filter-group {
-    flex-direction: column;
-    align-items: stretch !important;
-    gap: 15px;
-  }
-
-  .date-range-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .range-arrow {
-    display: none; /* Panah tengah gak butuh pas numpuk vertikal */
-  }
-
-  .btn-export {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 768px) {
-  /* 1. Sembunyiin header asli (Karyawan, Tanggal, dll) */
-  .custom-table thead {
-    display: none;
-  }
-
-  /* 2. Paksa baris table jadi satu kartu utuh */
-  .custom-table tr {
-    display: block;
-    margin-bottom: 20px;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    background: var(--bg-card);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  tr {
+    margin-bottom: 20px !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
   }
 
-  /* 3. Paksa sel table jadi baris di dalam kartu */
-  .custom-table td {
-    display: flex; /* Bikin kiri-kanan */
-    justify-content: flex-end; /* Data (isi) di kanan */
-    align-items: center;
-    padding: 12px 15px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    position: relative;
-    min-height: 45px;
-    text-align: right;
+  td {
+    text-align: right !important;
+    padding: 12px 15px !important;
+    border-bottom: 1px solid var(--bg-main) !important;
+    position: relative !important;
+    min-height: 45px !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
   }
 
-  /* 4. Munculin label di sisi kiri pake data-label */
-  .custom-table td::before {
+  /* Label di Kiri (Ambil dari data-label) */
+  td::before {
     content: attr(data-label);
-    position: absolute;
-    left: 15px;
-    font-weight: 700;
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
+    position: absolute !important;
+    left: 15px !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase !important;
     letter-spacing: 0.5px;
   }
 
-  /* 5. Sesuai request: Sembunyikan foto profil/avatar di HP */
-  .avatar-small {
-    display: none !important;
-  }
-
-  /* 6. Biar nama karyawan tetap rapi tanpa avatar */
-  .user-td {
-    justify-content: flex-end;
-  }
-
-  /* 7. Kasih warna beda di bagian bawah kartu biar jelas pemisahnya */
-  .custom-table td:last-child {
-    border-bottom: none;
-    background: var(--bg-main);
-    font-weight: 600;
-  }
-
-  /* 8. Beresin tag lokasi biar gak berantakan */
-  .location-tag {
-    justify-content: flex-end;
-    background: transparent !important;
-    padding: 0 !important;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Sembunyikan Header asli */
-  .karyawan-table thead,
-  .karyawan-table thead th,
-  .custom-table thead {
-    display: none !important;
-  }
-
-  /* Baris Table jadi Card */
-  .karyawan-table tr,
-  .custom-table tr {
-    display: block;
-    width: 100%;
-    min-width: 320px; /* Standar minimal HP paling kecil */
-    margin-bottom: 16px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Sel Table jadi Baris di dalam Card */
-  .karyawan-table td,
-  .custom-table td {
-    display: flex !important; /* Pakai Flex biar kelihatan */
-    justify-content: flex-end; /* Isi data di kanan */
-    align-items: center;
-    padding: 12px 15px;
-    position: relative;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    min-height: 48px; /* Biar nggak gepeng */
-    width: 100% !important;
-    text-align: right;
-  }
-
-  /* Label di sisi kiri */
-  .karyawan-table td::before,
-  .custom-table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 15px;
-    font-weight: 700;
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    text-align: left;
-  }
-
-  /* Hilangkan Avatar di mode HP */
+  /* Sesuai request: Hilangkan Avatar/Foto di HP biar gak sempit */
   .user-avatar,
   .user-avatar-img,
-  .avatar-small {
+  .avatar-small,
+  .admin-avatar-circle {
     display: none !important;
   }
 
-  /* Pastikan nama user mepet kanan */
+  /* Info User & Aksi biar rapi di kanan */
   .user-info,
-  .user-td {
-    width: 100%;
-    justify-content: flex-end;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-
-  /* Tombol status dan aksi biar pas */
-  .status-pill,
-  .badge-type,
-  .badge-role {
-    margin-left: auto;
-  }
-
-  /* Baris terakhir jangan pakai border */
-  .karyawan-table td:last-child,
-  .custom-table td:last-child {
-    border-bottom: none;
-    background: rgba(0, 0, 0, 0.1); /* Pembeda buat bagian aksi */
+  .action-btns {
+    justify-content: flex-end !important;
+    width: auto !important;
   }
 }
 
-/* Khusus HP Lebar Max 420px */
+/* ============================================================
+   3. DASHBOARD & UI ELEMENTS (Max 480px)
+   ============================================================ */
 @media (max-width: 480px) {
-  /* 1. Sembunyikan Header Asli */
-  .karyawan-table thead,
-  .custom-table thead {
-    display: none !important;
+  .stats-grid-web {
+    grid-template-columns: 1fr !important; /* Stats numpuk 1 kolom */
   }
 
-  /* 2. Row jadi Card */
-  .karyawan-table tr,
-  .custom-table tr {
-    display: block;
-    width: 100%;
-    margin-bottom: 20px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 8px 0;
+  .page-title {
+    font-size: 1.2rem !important;
   }
 
-  /* 3. Kolom jadi Baris Flex (Kunci utama biar gak numpuk) */
-  .karyawan-table td,
-  .custom-table td {
-    display: flex !important;
-    justify-content: space-between; /* Judul di kiri, Data di kanan */
-    align-items: center;
-    padding: 12px 15px !important;
-    border-top: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    min-height: 50px;
-    text-align: right;
+  /* Button & Search biar Full Width */
+  .search-box,
+  .btn-primary,
+  .period-picker {
+    width: 100% !important;
+    max-width: none !important;
   }
 
-  /* 4. Judul (data-label) di sisi kiri */
-  .karyawan-table td::before,
-  .custom-table td::before {
-    content: attr(data-label);
-    font-weight: 700;
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    text-align: left;
-    flex: 1; /* Kasih ruang di kiri */
+  .action-bar {
+    flex-direction: column !important;
+    gap: 10px !important;
   }
 
-  /* 5. Isi Data di sisi kanan */
-  .karyawan-table td > *,
-  .custom-table td > * {
-    flex: 2; /* Biar datanya dapet ruang lebih luas */
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  /* Modal Adjustment */
+  .modal-content {
+    width: 95% !important;
+    margin: 10px auto !important;
+    padding: 20px !important;
   }
+}
 
-  /* 6. Matikan Avatar (Request lu) */
-  .user-avatar,
-  .user-avatar-img,
-  .avatar-small {
-    display: none !important;
-  }
+/* ============================================================
+   4. FIX UNTUK SIDEBAR OVERLAY
+   ============================================================ */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+}
 
-  /* 7. Beresin teks yang numpuk di info user */
-  .user-info {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-  }
-
-  /* 8. Beresin Aksi (Tombol Delete/Status) */
-  .action-btns,
-  .status-pill {
-    margin-left: auto;
-  }
-
-  /* Baris terakhir jangan pakai border */
-  .karyawan-table td:last-child,
-  .custom-table td:last-child {
-    border-bottom: none !important;
-  }
+/* Smooth Transition */
+.sidebar,
+.main-content {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

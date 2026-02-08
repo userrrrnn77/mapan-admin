@@ -1,0 +1,104 @@
+.dashboard-wrapper {
+  padding-bottom: 40px;
+}
+.stats-grid-web {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 Kolom Bre */
+  gap: 20px;
+}
+.content-row {
+  display: flex;
+  gap: 25px;
+  margin-top: 30px;
+}
+.menu-section {
+  flex: 0.8;
+}
+.feed-section {
+  flex: 1.2;
+}
+.section-title {
+  color: var(--text-main);
+  font-weight: 800;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+.menu-grid-web {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+.menu-item-web {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 25px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  color: var(--text-main);
+  transition: 0.3s ease;
+}
+.menu-item-web:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow);
+  border-color: var(--primary);
+}
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.feed-card {
+  background: var(--bg-card);
+  padding: 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+.feed-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.user-name {
+  font-weight: 800;
+  color: var(--text-main);
+  font-size: 14px;
+}
+.category-badge {
+  background: var(--bg-main);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--primary);
+  text-transform: uppercase;
+}
+.feed-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 6px 0;
+}
+.feed-desc {
+  color: var(--text-main);
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  opacity: 0.6;
+}
+.text-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+}

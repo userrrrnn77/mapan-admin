@@ -124,6 +124,7 @@ const Attendance = () => {
 
   return (
     <>
+    {/* Absen bre */}
       {/* MODAL DETAIL ABSENSI */}
       {selectedItem && (
         <div className="modal-overlay" onClick={() => setSelectedItem(null)}>

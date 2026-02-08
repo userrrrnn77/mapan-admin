@@ -46,6 +46,7 @@ const WorkLocation = () => {
 
   return (
     <>
+    {/* worklocation bre */}
       <Helmet>
         <title>Lokasi Kerja</title>
         <meta name="description" content="Lokasi Kerja Karyawan | Penempatan" />
@@ -253,24 +254,6 @@ const WorkLocation = () => {
             ))
           )}
         </div>
-
-        <style jsx>{`
-          .spin {
-            animation: spin 1s linear infinite;
-          }
-          @keyframes spin {
-            from {
-              transform: rotate(0deg);
-            }
-            to {
-              transform: rotate(360deg);
-            }
-          }
-          input:focus {
-            border-color: var(--primary) !important;
-            outline: none;
-          }
-        `}</style>
       </div>
     </>
   );
