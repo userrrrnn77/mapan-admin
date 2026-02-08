@@ -1,3 +1,4 @@
+/* variables.css */
 :root {
   /* Colors */
   --primary: #4630eb;
@@ -22,7 +23,7 @@
   --text-dropdown: #2b3674;
   --text-dropdown-hover: #ffffff;
   --shadow-dropdown: 0 10px 25px rgba(112, 144, 176, 0.15);
-  
+
   --scrollbar-track: #f1f1f1;
   --scrollbar-thumb: #c1c1c1;
   --scrollbar-thumb-hover: #a8a8a8;

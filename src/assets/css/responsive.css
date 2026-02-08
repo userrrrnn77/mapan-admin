@@ -1,181 +1,371 @@
-/* ============================================================
-   1. GLOBAL MOBILE RESET (Max 992px)
-   ============================================================ */
-@media (max-width: 992px) {
+/* responsive.css */
+
+/* ===== DESKTOP FIRST APPROACH ===== */
+
+/* ===== LARGE DESKTOP (1200px+) ===== */
+@media (min-width: 1200px) {
   .main-content {
-    margin-left: 0 !important; /* Sidebar jadi overlay, konten full */
-    padding: 15px !important;
-    width: 100% !important;
+    padding: 30px 40px;
   }
 
   .stats-grid-web {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 15px !important;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
   }
 
-  /* Navbar Adjustment */
-  .navbar {
-    padding: 10px 15px !important;
+  .table-wrapper {
+    max-height: 75vh;
   }
 }
 
-/* ============================================================
-   2. TABLE TO CARD TRANSFORMATION (The "Bre" Special)
-   Target: .karyawan-table, .custom-table, .payroll-table
-   ============================================================ */
-@media (max-width: 768px) {
-  /* Sembunyikan Header Table */
-  table thead {
-    display: none !important;
+/* ===== TABLET & SMALL DESKTOP (768px - 1199px) ===== */
+@media (max-width: 1199px) {
+  .main-content {
+    padding: 20px 25px;
   }
 
-  /* Baris jadi Card */
-  table,
-  tbody,
-  tr,
-  td {
+  .stats-grid-web {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .content-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .menu-section,
+  .feed-section {
+    flex: 1;
+  }
+
+  .modal-content {
+    width: 90%;
+    max-width: 500px;
+    margin: 0 20px;
+  }
+
+  .detail-modal {
+    width: 95% !important;
+    max-width: 600px;
+  }
+}
+
+/* ===== TABLET LANDSCAPE (992px - 1199px) ===== */
+@media (max-width: 1199px) and (min-width: 992px) {
+  .sidebar {
+    width: 220px;
+  }
+
+  .main-content {
+    margin-left: 220px;
+  }
+
+  .filter-group {
+    gap: 15px;
+  }
+
+  .date-range-wrapper {
+    gap: 8px;
+  }
+}
+
+/* ===== MOBILE & TABLET PORTRAIT (max-width: 991px) ===== */
+@media (max-width: 991px) {
+  /* LAYOUT UTAMA */
+  .layout-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding: 15px !important;
+    min-height: 100vh;
+    width: 100% !important;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    padding: 10px 15px;
+    height: auto;
+    min-height: 60px;
+    flex-wrap: wrap;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+
+  .title-group {
+    margin-left: 10px;
+  }
+
+  .page-title {
+    font-size: 18px;
+    margin-top: 2px;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+  }
+
+  .nav-right {
+    gap: 10px;
+  }
+
+  .admin-text-details {
+    display: none;
+  }
+
+  .nav-icon-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+
+  .burger-btn {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    margin-right: 10px;
+    cursor: pointer;
+    padding: 5px;
+  }
+
+  /* DASHBOARD - MODIFIKASI: Kebawah Semua */
+  .dashboard-wrapper {
+    padding-bottom: 20px;
+  }
+
+  .stats-grid-web {
+    grid-template-columns: 1fr !important; /* 1 kolom full */
+    gap: 15px !important;
+  }
+
+  .content-row {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .menu-grid-web {
+    grid-template-columns: 1fr !important; /* Menu tumpuk ke bawah */
+    gap: 12px !important;
+  }
+
+  .menu-item-web {
+    padding: 15px;
+    gap: 8px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+
+  /* TABLES - MODIFIKASI TOTAL: THEAD KIRI, DATA KANAN */
+  .table-wrapper {
+    overflow-x: hidden !important; /* ANTI SCROLL SAMPING */
+    max-height: none !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .custom-table,
+  .karyawan-table,
+  .payroll-table {
+    display: block !important;
+    min-width: 100% !important;
+    border: none !important;
+  }
+
+  .custom-table thead,
+  .karyawan-table thead,
+  .payroll-table thead,
+  .table-footer {
+    display: none !important; /* Buang thead asli */
+  }
+
+  .custom-table tbody,
+  .karyawan-table tbody,
+  .payroll-table tbody {
     display: block !important;
     width: 100% !important;
   }
 
-  tr {
-    margin-bottom: 20px !important;
+  .custom-table tr,
+  .karyawan-table tr,
+  .payroll-table tr {
+    display: block !important;
     background: var(--bg-card) !important;
-    border: 1px solid var(--border-color) !important;
+    margin-bottom: 15px !important;
     border-radius: 12px !important;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    padding: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-sizing: border-box !important;
   }
 
-  td {
-    text-align: right !important;
-    padding: 12px 15px !important;
-    border-bottom: 1px solid var(--bg-main) !important;
-    position: relative !important;
-    min-height: 45px !important;
+  .custom-table td,
+  .karyawan-table td,
+  .payroll-table td {
     display: flex !important;
-    justify-content: flex-end !important;
+    justify-content: space-between !important;
     align-items: center !important;
+    padding: 10px 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    text-align: right !important;
+    background: transparent !important;
   }
 
-  /* Label di Kiri (Ambil dari data-label) */
-  td::before {
+  .custom-table td:last-child {
+    border-bottom: none !important;
+  }
+
+  /* Label Thead di Kiri */
+  .custom-table td::before,
+  .karyawan-table td::before,
+  .payroll-table td::before {
     content: attr(data-label);
-    position: absolute !important;
-    left: 15px !important;
     font-weight: 700 !important;
     font-size: 11px !important;
     color: var(--text-muted) !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: left !important;
+    flex: 1;
   }
 
-  /* Sesuai request: Hilangkan Avatar/Foto di HP biar gak sempit */
-  .user-avatar,
-  .user-avatar-img,
-  .avatar-small,
-  .admin-avatar-circle {
-    display: none !important;
-  }
-
-  /* Info User & Aksi biar rapi di kanan */
-  .user-info,
-  .action-btns {
+  /* Konten Data di Kanan */
+  .user-td,
+  .td-datetime,
+  .badge-type,
+  .status-pill,
+  .penalty-cell,
+  .location-tag,
+  .action-btns,
+  .user-info {
+    flex: 1.5 !important;
+    display: flex !important;
     justify-content: flex-end !important;
-    width: auto !important;
-  }
-}
-
-/* ============================================================
-   3. DASHBOARD & UI ELEMENTS (Max 480px)
-   ============================================================ */
-@media (max-width: 480px) {
-  .stats-grid-web {
-    grid-template-columns: 1fr !important; /* Stats numpuk 1 kolom */
+    align-items: center;
+    gap: 8px;
+    font-size: 13px !important;
+    white-space: normal !important;
+    word-break: break-all !important;
   }
 
-  .page-title {
-    font-size: 1.2rem !important;
+  .avatar-small {
+    width: 28px !important;
+    height: 28px !important;
+    margin: 0 !important;
   }
 
-  /* Button & Search biar Full Width */
-  .search-box,
-  .btn-primary,
-  .period-picker {
-    width: 100% !important;
-    max-width: none !important;
-  }
-
+  /* ACTION BAR & FILTER - MODIFIKASI: Kebawah Semua */
   .action-bar {
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .btn-primary {
+    order: 1;
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 12px 20px !important;
+  }
+
+  .filter-group {
     flex-direction: column !important;
-    gap: 10px !important;
+    gap: 15px !important;
+    align-items: stretch !important;
   }
 
-  /* Modal Adjustment */
+  .date-range-wrapper {
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  /* MODALS & FORMS */
+  .modal-overlay {
+    padding: 20px;
+    padding-top: 50px;
+  }
+
   .modal-content {
-    width: 95% !important;
-    margin: 10px auto !important;
-    padding: 20px !important;
+    width: 95%;
+    max-height: 85vh;
+  }
+
+  .detail-grid,
+  .info-grid,
+  .form-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
-/* ============================================================
-   4. FIX UNTUK SIDEBAR OVERLAY
-   ============================================================ */
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 998;
-}
-
-/* Smooth Transition */
-.sidebar,
-.main-content {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ============================================================
-   NAVBAR REFINEMENT (THE FINAL TOUCH)
-   ============================================================ */
-
+/* ===== EXTRA SMALL MOBILE (max-width: 480px) ===== */
 @media (max-width: 480px) {
-  .navbar {
-    gap: 10px;
+  .main-content {
     padding: 10px !important;
-    height: auto !important; /* Biar flexnya gak kepotong */
-    min-height: 70px;
   }
 
-  /* Judul halaman kecilin dikit di HP */
   .page-title {
+    font-size: 16px !important;
+  }
+
+  .custom-table td,
+  .custom-table td::before {
     font-size: 12px !important;
   }
+  
+}
 
-  .breadcrumb {
-    font-size: 11px !important;
+/* ===== UTILITIES, PRINT, & ACCESSIBILITY (Udah Full Bre) ===== */
+@media (max-width: 991px) {
+  body {
+    overflow-x: hidden;
   }
-
-  /* Profile wrapper di HP: ilangin padding berlebih */
-  .admin-profile-wrapper {
-    padding: 4px 4px 4px 10px !important;
-    gap: 8px !important;
+  .full-width-mobile {
+    width: 100% !important;
   }
-
-  /* Jarak icon theme sama profile */
-  .nav-right {
-    gap: 10px !important;
+  .hide-mobile {
+    display: none !important;
   }
+}
 
-  /* Sembunyikan Role di HP biar gak numpuk */
-  .admin-role {
-    display: none;
+@media print {
+  .sidebar,
+  .navbar,
+  .action-bar {
+    display: none !important;
   }
+  .main-content {
+    margin-left: 0;
+  }
+  .table-wrapper {
+    overflow: visible;
+  }
+}
 
-  /* Ukuran tombol logout di HP */
-  .logout-icon-btn {
-    width: 32px;
-    height: 32px;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

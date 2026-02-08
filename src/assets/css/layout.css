@@ -1,3 +1,4 @@
+/* layout.css */
 .layout-wrapper {
   display: flex;
   min-height: 100vh;
@@ -337,42 +338,65 @@
   background: white;
 }
 
-/* --- CUSTOM SCROLLBAR --- */
-/* Untuk Chrome, Safari, dan Edge */
+/* 1. Aktifin lagi scrollbar biar gak 'gaib' di desktop */
 .table-wrapper::-webkit-scrollbar {
-  width: 6px; /* Lebar scrollbar vertikal */
-  height: 6px; /* Tinggi scrollbar horizontal */
-}
-
-.table-wrapper::-webkit-scrollbar-track {
-  background: var(--bg-main); /* Warna dasar track */
-  border-radius: 10px;
+  display: block !important; /* Timpa reset global lu */
+  width: 8px;
+  height: 8px;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
-  background: #d1d5db; /* Warna bar-nya */
+  background: var(--scrollbar-thumb);
   border-radius: 10px;
-  transition: all 0.3s ease;
 }
 
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-  background: var(--primary); /* Berubah warna pas di-hover */
+.table-wrapper::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
 }
 
-/* Untuk Firefox */
+/* 2. Fix Card Parent (Biarkan wrapper di dalamnya yang handle scroll) */
+.table-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  overflow: visible !important; /* JANGAN HIDDEN DI SINI BRE */
+}
+
+/* 3. Fix Wrapper Utama */
 .table-wrapper {
-  scrollbar-width: thin;
-  scrollbar-color: #d1d5db var(--bg-main);
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  display: block;
+  width: 100%;
+
+  /* Ini kunci utamanya */
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+
+  /* Kasih batas tinggi biar scrollbar muncul di laptop */
+  max-height: 70vh;
+
+  position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Tambahan: Pastikan table-wrapper punya overflow */
-.table-wrapper {
-  overflow: auto;
-  max-height: 70vh; /* Opsional: Biar tabel ada batas tingginya dan scroll muncul */
+/* 4. Pastikan tabel gak ciut */
+.custom-table,
+.karyawan-table,
+.payroll-table {
+  width: 100%;
+  min-width: 800px; /* Supaya di laptop yang layarnya kecil, scroll horizontal muncul */
+  border-collapse: collapse;
 }
 
-.table-card::-webkit-scrollbar {
-  display: none;
+/* 5. Sticky Header biar gak ilang pas di scroll ke bawah */
+.table-wrapper thead th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg-card);
+  box-shadow: inset 0 -1px 0 var(--border-color);
 }
 /* Container Utama Full Screen */
 .login-container {

@@ -79,8 +79,9 @@ const WorkLocation = () => {
             </div>
           ) : (
             locations.map((loc) => (
-              <div key={loc._id} className="table-wrapper" style={{ padding: '0' }}>
+              <div key={loc._id} className="worklocWrap" style={{ padding: '0' }}>
                 {/* Header Card dengan Variabel CSS */}
+               {/* ini masih belum responsive bre */}
                 <div
                   style={{
                     padding: '20px',

@@ -1,3 +1,4 @@
+/* worklocation.css */
 .spin {
   animation: spin 1s linear infinite;
 }
@@ -13,86 +14,77 @@ input:focus {
   border-color: var(--primary) !important;
   outline: none;
 }
+
 /* ============================================================
-   WORK LOCATION RESPONSIVE - THE "BRE" FIX
+   WORK LOCATION RESPONSIVE (Add to your responsive.css)
    ============================================================ */
 
-@media (max-width: 480px) {
-  /* 1. Paksa Container Utama */
-  .attendance-container {
-    padding: 10px !important;
-    overflow-x: hidden !important;
-  }
-
-  /* 2. Jinakkan Grid Inline Style lu Bre */
-  .attendance-container > div[style*='grid'] {
-    grid-template-columns: 1fr !important; /* Paksa 1 kolom */
+@media (max-width: 991px) {
+  /* Override inline style grid di container utama */
+  .attendance-container > div[style*='display: grid'] {
+    grid-template-columns: 1fr !important; /* Paksa jadi 1 kolom */
     gap: 15px !important;
-    display: flex !important;
-    flex-direction: column !important;
   }
 
-  /* 3. Kartu (Table Wrapper) */
-  .attendance-container .table-wrapper {
-    max-height: none !important; /* Jangan ada scroll di dalem kartu */
-    width: 100% !important;
+  /* Styling Card Kantor */
+  .worklocWrap {
     border-radius: 12px !important;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
   }
 
-  /* 4. Header Kartu (Tempat Judul & Maps) */
-  .attendance-container .table-wrapper > div:first-child {
-    padding: 12px 15px !important;
-    flex-direction: row !important; /* Biar Maps tetep di kanan judul */
+  /* Header Card (Nama Kantor & Button Maps) */
+  .worklocWrap > div:first-child {
+    padding: 15px !important;
+    flex-direction: row !important; /* Tetap sejajar kiri-kanan */
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
-  /* 5. Body Kartu (Form Area) */
-  .attendance-container .table-wrapper > div:last-child {
-    padding: 15px !important; /* Kecilin padding dari 25px */
-    gap: 12px !important;
+  /* Form Area inside Card */
+  .worklocWrap > div:last-child {
+    padding: 20px !important;
+    gap: 15px !important;
   }
 
-  /* 6. Latitude & Longitude (Tumpuk Atas-Bawah) */
-  .attendance-container div[style*='gridTemplateColumns: 1fr 1fr'] {
+  /* Input Group: Latitude & Longitude */
+  /* Ini yang tadinya 2 kolom (1fr 1fr), kita bikin numpuk */
+  .worklocWrap .input-group + div[style*='grid-template-columns'] {
     grid-template-columns: 1fr !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
+    gap: 15px !important;
   }
 
-  /* 7. Input & Label */
-  .attendance-container .input-group label {
-    font-size: 10px !important;
-    margin-bottom: 4px !important;
-    letter-spacing: 0.5px;
-  }
-
-  .attendance-container .input-group input {
-    padding: 10px 12px !important;
-    font-size: 14px !important;
-    border-radius: 8px !important;
-    height: 42px !important;
-  }
-
-  /* 8. Bagian Radius (Biar Teks Penjelasan Gak Offside) */
-  .attendance-container div[style*='display: flex; align-items: center; gap: 10px'] {
+  /* Radius Section */
+  .worklocWrap .input-group div[style*='display: flex'] {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 6px !important;
+    gap: 8px !important;
   }
 
-  .attendance-container div[style*='display: flex; align-items: center; gap: 10px'] input {
+  .worklocWrap .input-group input[style*='width: 120px'] {
     width: 100% !important; /* Input radius jadi full width */
   }
 
-  .attendance-container div[style*='display: flex; align-items: center; gap: 10px'] span {
-    font-size: 11px !important;
-    line-height: 1.4;
+  /* Button Simpan biar mantap di jempol */
+  .worklocWrap .btn-primary {
+    height: 48px !important;
+    font-size: 14px;
+    margin-top: 5px !important;
+  }
+}
+
+/* Extra Small Mobile Optimization */
+@media (max-width: 480px) {
+  .worklocWrap > div:first-child {
+    flex-direction: column !important; /* Di HP kecil banget, Maps pindah bawah */
+    align-items: flex-start !important;
   }
 
-  /* 9. Tombol Simpan (Gedein dikit buat Jempol) */
-  .attendance-container .btn-primary {
-    height: 48px !important;
-    margin-top: 5px !important;
-    font-size: 14px !important;
+  .loc-badge {
+    width: 100%;
+    justify-content: center;
+    padding: 8px !important;
+    background: rgba(70, 48, 235, 0.1);
+    border-radius: 8px;
   }
 }
