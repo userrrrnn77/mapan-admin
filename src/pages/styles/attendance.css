@@ -475,22 +475,21 @@ input[type='date']::-webkit-calendar-picker-indicator:hover {
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
 
-  /* --- KUNCI BIAR GA SCROLL SATU HALAMAN --- */
-  max-height: calc(100vh - 320px); /* 320px ini perkiraan tinggi header & filter lu */
-  overflow-y: auto; /* Muncul scroll vertikal kalo data penuh */
-  overflow-x: auto; /* Tetap aman buat mobile/kolom lebar */
-
-  box-shadow: var(--shadow);
+  /* --- FIX KUNCI SCROLL --- */
+  /* Di desktop, kita kasih batas biar header table sticky-nya kerja */
+  max-height: 70vh;
+  overflow: auto;
   position: relative;
+  box-shadow: var(--shadow);
 }
 
-/* Biar Header Table (Th) tetep keliatan pas di scroll (Sticky) */
+/* Supaya sticky header gak tembus pas di scroll */
 .custom-table thead th {
   position: sticky;
   top: 0;
-  z-index: 10;
-  background: var(--bg-main); /* Biar nutupin data pas di scroll ke atas */
-  box-shadow: inset 0 -1px 0 var(--border-color); /* Pengganti border-bottom */
+  z-index: 20;
+  background: var(--bg-card); /* Samain sama warna kartu biar ga transparan */
+  box-shadow: inset 0 -1px 0 var(--border-color);
 }
 
 .clickable-row:hover td {
