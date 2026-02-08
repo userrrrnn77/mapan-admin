@@ -13,3 +13,86 @@ input:focus {
   border-color: var(--primary) !important;
   outline: none;
 }
+/* ============================================================
+   WORK LOCATION RESPONSIVE - THE "BRE" FIX
+   ============================================================ */
+
+@media (max-width: 480px) {
+  /* 1. Paksa Container Utama */
+  .attendance-container {
+    padding: 10px !important;
+    overflow-x: hidden !important;
+  }
+
+  /* 2. Jinakkan Grid Inline Style lu Bre */
+  .attendance-container > div[style*='grid'] {
+    grid-template-columns: 1fr !important; /* Paksa 1 kolom */
+    gap: 15px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* 3. Kartu (Table Wrapper) */
+  .attendance-container .table-wrapper {
+    max-height: none !important; /* Jangan ada scroll di dalem kartu */
+    width: 100% !important;
+    border-radius: 12px !important;
+  }
+
+  /* 4. Header Kartu (Tempat Judul & Maps) */
+  .attendance-container .table-wrapper > div:first-child {
+    padding: 12px 15px !important;
+    flex-direction: row !important; /* Biar Maps tetep di kanan judul */
+  }
+
+  /* 5. Body Kartu (Form Area) */
+  .attendance-container .table-wrapper > div:last-child {
+    padding: 15px !important; /* Kecilin padding dari 25px */
+    gap: 12px !important;
+  }
+
+  /* 6. Latitude & Longitude (Tumpuk Atas-Bawah) */
+  .attendance-container div[style*='gridTemplateColumns: 1fr 1fr'] {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  /* 7. Input & Label */
+  .attendance-container .input-group label {
+    font-size: 10px !important;
+    margin-bottom: 4px !important;
+    letter-spacing: 0.5px;
+  }
+
+  .attendance-container .input-group input {
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    border-radius: 8px !important;
+    height: 42px !important;
+  }
+
+  /* 8. Bagian Radius (Biar Teks Penjelasan Gak Offside) */
+  .attendance-container div[style*='display: flex; align-items: center; gap: 10px'] {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+  }
+
+  .attendance-container div[style*='display: flex; align-items: center; gap: 10px'] input {
+    width: 100% !important; /* Input radius jadi full width */
+  }
+
+  .attendance-container div[style*='display: flex; align-items: center; gap: 10px'] span {
+    font-size: 11px !important;
+    line-height: 1.4;
+  }
+
+  /* 9. Tombol Simpan (Gedein dikit buat Jempol) */
+  .attendance-container .btn-primary {
+    height: 48px !important;
+    margin-top: 5px !important;
+    font-size: 14px !important;
+  }
+}

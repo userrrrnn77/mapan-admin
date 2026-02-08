@@ -497,3 +497,214 @@ input[type='date']::-webkit-calendar-picker-indicator:hover {
   background-color: var(--bg-main);
   transition: 0.2s;
 }
+
+/* ============================================================
+   1. FIX FILTER AREA (Yang numpuk di atas)
+   ============================================================ */
+@media (max-width: 768px) {
+  .attendance-header-card {
+    padding: 15px !important;
+  }
+
+  /* Biar input tanggal atas-bawah, gak maksa kiri-kanan */
+  .date-range-wrapper {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100%;
+  }
+
+  .range-arrow {
+    display: none; /* Panah ke kanan buang aja di HP biar hemat space */
+  }
+
+  .filter-group {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 15px !important;
+  }
+
+  .user-filter-container,
+  .custom-input-group,
+  .btn-export {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+
+  .btn-export {
+    justify-content: center; /* Biar teks di tengah pas full width */
+  }
+}
+
+/* ============================================================
+   2. TABLE TO CARD TRANSFORMATION (Fix Image 2 Lu)
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Sembunyikan header tabel asli */
+  .custom-table thead {
+    display: none !important;
+  }
+
+  .custom-table,
+  .custom-table tbody,
+  .custom-table tr,
+  .custom-table td {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .custom-table tr {
+    margin-bottom: 20px !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    background: var(--bg-card) !important;
+    overflow: hidden;
+  }
+
+  .custom-table td {
+    text-align: right !important; /* Data di kanan */
+    padding: 12px 15px !important;
+    border-bottom: 1px solid var(--bg-main) !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    min-height: 45px;
+  }
+
+  /* Label sakti buat jelasin ini data apa */
+  .custom-table td::before {
+    content: attr(data-label);
+    position: absolute !important;
+    left: 15px !important;
+    font-weight: 800 !important;
+    font-size: 11px !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase !important;
+  }
+
+  /* Rapihin Avatar & Info Karyawan di HP */
+  .user-td {
+    justify-content: flex-end !important;
+  }
+
+  .avatar-small {
+    display: none !important; /* Sembunyikan inisial bulet biar gak menuhin baris */
+  }
+
+  /* Tipe Badge (Masuk/Keluar) biar tetep cakep */
+  .badge-type {
+    margin-left: auto;
+  }
+
+  /* Footer (Totalan) */
+  .table-footer {
+    display: block !important;
+  }
+
+  .table-footer tr td {
+    text-align: center !important;
+    justify-content: center !important;
+    background: var(--bg-main) !important;
+    font-size: 16px !important;
+  }
+
+  .table-footer td::before {
+    display: none !important; /* Jangan kasih label di row TOTAL */
+  }
+}
+
+@media (max-width: 480px) {
+  /* 1. Hilangkan semua jejak tabel */
+  .table-wrapper {
+    background: transparent !important;
+    border: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .custom-table {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    border: none !important;
+  }
+
+  /* 2. Sembunyikan Header (Th) & Footer (Tfoot) bawaan */
+  .custom-table thead,
+  .custom-table tfoot {
+    display: none !important;
+  }
+
+  /* 3. Baris (TR) Jadi Kartu Cantik */
+  .custom-table tr {
+    display: flex !important;
+    flex-direction: column !important;
+    background: var(--bg-card) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    position: relative;
+    gap: 8px;
+  }
+
+  /* 4. Kolom (TD) Diatur Ulang Posisi-nya */
+  .custom-table td {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 4px 0 !important;
+    border: none !important;
+    text-align: left !important;
+    width: 100% !important;
+    min-height: auto !important;
+  }
+
+  /* Label Kiri */
+  .custom-table td::before {
+    content: attr(data-label);
+    position: static !important; /* Pindah dari absolute ke static biar rapi */
+    font-size: 11px !important;
+    color: var(--text-muted) !important;
+    font-weight: 600 !important;
+  }
+
+  /* 5. Styling Khusus Nama Karyawan (Biar Menonjol) */
+  .custom-table td[data-label='Karyawan'] {
+    order: -1; /* Paling atas */
+    border-bottom: 1px solid var(--border-color) !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 5px !important;
+  }
+
+  .user-td {
+    font-weight: 800 !important;
+    font-size: 16px !important;
+    color: var(--primary) !important;
+  }
+
+  /* 6. Fix Scroll: Biar halaman bisa di-scroll secara natural */
+  body,
+  #root,
+  .main-content {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  /* Sembunyikan elemen yang gak penting di HP biar lega */
+  .avatar-small,
+  .td-date {
+    display: none !important;
+  }
+
+  /* 7. Floating Total (Opsional biar admin tau total di paling bawah) */
+  .attendance-container::after {
+    content: 'Total Data: ' attr(data-total);
+    display: block;
+    text-align: center;
+    padding: 20px;
+    font-weight: bold;
+    color: var(--text-muted);
+  }
+}

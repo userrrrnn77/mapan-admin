@@ -102,3 +102,69 @@
   font-weight: 700;
   font-size: 13px;
 }
+
+/* --- RESPONSIVE DASHBOARD STRATEGY --- */
+
+/* 1. TABLET & LAPTOP KECIL (Max 1024px) */
+@media (max-width: 1024px) {
+  .stats-grid-web {
+    grid-template-columns: repeat(2, 1fr) !important; /* Jadi 2x2 */
+  }
+}
+
+/* 2. HANDPHONE (Max 768px) */
+@media (max-width: 768px) {
+  .dashboard-wrapper {
+    padding: 10px;
+  }
+
+  /* Statistik jadi 1 kolom biar lega */
+  .stats-grid-web {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Row utama yang tadinya kiri-kanan jadi atas-bawah */
+  .content-row {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .menu-section,
+  .feed-section {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  /* Card Menu Navigasi */
+  .menu-grid-web {
+    grid-template-columns: repeat(2, 1fr) !important; /* Tetep 2x2 tapi padding dikecilin */
+    gap: 10px !important;
+  }
+
+  .menu-item-web {
+    padding: 15px !important; /* Dikecilin biar nggak makan tempat */
+  }
+
+  .menu-item-web span {
+    font-size: 12px !important;
+  }
+}
+
+/* 3. HP KECIL (Max 480px) */
+@media (max-width: 480px) {
+  /* Kalau layarnya sempit banget, menu navigasi jadi 1 kolom aja */
+  .menu-grid-web {
+    grid-template-columns: 1fr !important;
+  }
+
+  .section-title {
+    font-size: 16px !important;
+    margin-bottom: 15px !important;
+  }
+
+  /* StatBox biar nggak terlalu makan tempat */
+  .stats-grid-web > div {
+    padding: 15px !important;
+  }
+}

@@ -135,3 +135,47 @@
 .main-content {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ============================================================
+   NAVBAR REFINEMENT (THE FINAL TOUCH)
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .navbar {
+    gap: 10px;
+    padding: 10px !important;
+    height: auto !important; /* Biar flexnya gak kepotong */
+    min-height: 70px;
+  }
+
+  /* Judul halaman kecilin dikit di HP */
+  .page-title {
+    font-size: 12px !important;
+  }
+
+  .breadcrumb {
+    font-size: 11px !important;
+  }
+
+  /* Profile wrapper di HP: ilangin padding berlebih */
+  .admin-profile-wrapper {
+    padding: 4px 4px 4px 10px !important;
+    gap: 8px !important;
+  }
+
+  /* Jarak icon theme sama profile */
+  .nav-right {
+    gap: 10px !important;
+  }
+
+  /* Sembunyikan Role di HP biar gak numpuk */
+  .admin-role {
+    display: none;
+  }
+
+  /* Ukuran tombol logout di HP */
+  .logout-icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+}

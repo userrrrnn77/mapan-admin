@@ -1,3 +1,4 @@
+import './styles/workLocation.css'
 import React, { useState, useEffect } from 'react';
 import { MapPin, Save, Globe, Loader2, Target, Navigation } from 'lucide-react';
 import { getAllWorkLocationApi, updateWorkLocationApi } from '../api';
