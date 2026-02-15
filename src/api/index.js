@@ -61,11 +61,21 @@ export const getSemuaKebutuhanApi = () => api.get('/needs');
 export const postKebutuhanApi = (data) => api.post('/needs', data);
 
 // ===== PAYROLL (GAJI) =====
-export const getPayrollKaryawanApi = () => api.get('/users');
 
-// Proses hitung gaji per user
+// 1. Ambil daftar karyawan (untuk list di halaman payroll)
+export const getPayrollListApi = () => api.get('/payroll/karyawan');
+
+// 2. Proses hitung awal (auto-calculate telat dll)
 export const prosesPayrollApi = (userId, periode) =>
   api.post('/payroll/process', { userId, periode });
+
+// 3. Update/Save manual adjustment (Bonus, Potongan, Status)
+// Ini yang bakal dipake buat "Save" setelah admin edit manual
+export const updatePayrollApi = (id, data) => api.put(`/payroll/update/${id}`, data);
+
+// 4. Ambil Slip Gaji (Buat liat hasil akhir atau cetak)
+export const getSlipGajiApi = (userId, periode) =>
+  api.get('/payroll/slip', { params: { userId, periode } });
 
 // ===== LOKASI TUGAS =====
 export const getAllWorkLocationApi = () => api.get('/work-locations');

@@ -1,4 +1,3 @@
-import './styles/workLocation.css'
 import React, { useState, useEffect } from 'react';
 import { MapPin, Save, Globe, Loader2, Target, Navigation } from 'lucide-react';
 import { getAllWorkLocationApi, updateWorkLocationApi } from '../api';
@@ -47,7 +46,7 @@ const WorkLocation = () => {
 
   return (
     <>
-    {/* worklocation bre */}
+      {/* worklocation bre */}
       <Helmet>
         <title>Lokasi Kerja</title>
         <meta name="description" content="Lokasi Kerja Karyawan | Penempatan" />
@@ -81,7 +80,7 @@ const WorkLocation = () => {
             locations.map((loc) => (
               <div key={loc._id} className="worklocWrap" style={{ padding: '0' }}>
                 {/* Header Card dengan Variabel CSS */}
-               {/* ini masih belum responsive bre */}
+                {/* ini masih belum responsive bre */}
                 <div
                   style={{
                     padding: '20px',

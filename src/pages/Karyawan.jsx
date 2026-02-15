@@ -1,4 +1,3 @@
-import './styles/karyawan.css'
 import React, { useState, useEffect } from 'react';
 import { UserPlus, Trash2, Search, CheckCircle, XCircle, CircleUserRound } from 'lucide-react';
 import {
@@ -134,7 +133,7 @@ const Karyawan = () => {
 
   return (
     <>
-    {/* karyawab bre */}
+      {/* karyawab bre */}
       <Helmet>
         <title>Daftar Karyawan</title>
         <meta name="description" content="Daftar Manajemen Karyawan" />

@@ -1,4 +1,3 @@
-import './styles/attendance.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import { getAbsebsiApi } from '../api';
 import {
@@ -71,7 +70,7 @@ const Attendance = () => {
       return;
     }
 
-    // 1. Map data utama
+    // --- 1. DATA SHEET UTAMA (DETAIL) ---
     const excelData = data.map((item, index) => ({
       No: index + 1,
       'Nama Karyawan': item.user?.name || 'N/A',
@@ -86,12 +85,10 @@ const Attendance = () => {
       Lokasi: item.workLocation === '69809101f786b25b5149e3d6' ? 'FEB Pleburan' : 'FEB Tembalang',
     }));
 
-    // 2. Hitung Totalan (Biar admin nggak pusing)
     const totalPenalty = data.reduce((sum, item) => sum + (item.penalty || 0), 0);
     const totalLate = data.reduce((sum, item) => sum + (item.lateMinutes || 0), 0);
 
-    // 3. Tambahin baris kosong & baris total di paling bawah
-    excelData.push({}); // Baris kosong biar rapi
+    excelData.push({});
     excelData.push({
       No: 'TOTAL',
       'Nama Karyawan': `Total ${data.length} Data`,
@@ -99,32 +96,87 @@ const Attendance = () => {
       'Penalty (IDR)': totalPenalty,
     });
 
-    // 4. Proses pembuatan file
-    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    // --- 2. LOGIC REKAP (HADIR, SAKIT, ALPHA) ---
+    const getDatesInRange = (start, end) => {
+      const dates = [];
+      let curr = new Date(start);
+      const last = new Date(end);
+      while (curr <= last) {
+        if (curr.getDay() !== 0) dates.push(curr.toISOString().split('T')[0]);
+        curr.setDate(curr.getDate() + 1);
+      }
+      return dates;
+    };
+
+    const workingDays = getDatesInRange(startDate, endDate);
+
+    const rekapData = uniqueUsers.map((user, idx) => {
+      const userAbsen = data.filter((a) => a.user?.phone === user.phone);
+      let hadir = 0;
+      let sakit = 0;
+      let alpha = 0;
+
+      workingDays.forEach((day) => {
+        const recordsOnDay = userAbsen.find(
+          (a) => new Date(a.createdAt).toISOString().split('T')[0] === day,
+        );
+
+        if (!recordsOnDay) {
+          alpha++;
+        } else if (recordsOnDay.type === 'sakit') {
+          sakit++;
+        } else if (recordsOnDay.type === 'masuk') {
+          hadir++;
+        }
+      });
+
+      return {
+        No: idx + 1,
+        'Nama Karyawan': user.name,
+        Hadir: hadir,
+        'Sakit/Izin': sakit,
+        Alpha: alpha,
+        'Total Penalty': userAbsen.reduce((sum, item) => sum + (item.penalty || 0), 0),
+      };
+    });
+
+    // --- 3. PROSES PEMBUATAN WORKBOOK (2 SHEETS) ---
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Laporan Absensi');
 
-    // Atur lebar kolom biar nggak kegulung (Opsional tapi penting buat UX)
-    const wscols = [
-      { wch: 5 }, // No
-      { wch: 25 }, // Nama
-      { wch: 15 }, // Tanggal
-      { wch: 10 }, // Jam
-      { wch: 10 }, // Tipe
-      { wch: 15 }, // Terlambat
-      { wch: 15 }, // Penalty
-      { wch: 20 }, // Lokasi
+    // Sheet 1: Detail
+    const wsDetail = XLSX.utils.json_to_sheet(excelData);
+    wsDetail['!cols'] = [
+      { wch: 5 },
+      { wch: 25 },
+      { wch: 15 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 20 },
     ];
-    worksheet['!cols'] = wscols;
+    XLSX.utils.book_append_sheet(workbook, wsDetail, 'Laporan Detail');
 
-    // 5. Download file
-    const fileName = `Laporan_Absensi_${startDate}_to_${endDate}.xlsx`;
+    // Sheet 2: Rekap
+    const wsRekap = XLSX.utils.json_to_sheet(rekapData);
+    wsRekap['!cols'] = [
+      { wch: 5 },
+      { wch: 25 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 15 },
+    ];
+    XLSX.utils.book_append_sheet(workbook, wsRekap, 'Rekap Absensi');
+
+    // 4. Download
+    const fileName = `Laporan_Absensi_Mapan_${startDate}_to_${endDate}.xlsx`;
     XLSX.writeFile(workbook, fileName);
   };
 
   return (
     <>
-    {/* Absen bre */}
+      {/* Absen bre */}
       {/* MODAL DETAIL ABSENSI */}
       {selectedItem && (
         <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
@@ -324,7 +376,10 @@ const Attendance = () => {
                 {data.map((item) => (
                   <tr
                     key={item._id}
-                    onClick={() => setSelectedItem(item)}
+                    onClick={() => {
+                      setSelectedItem(item);
+                      console.log(selectedItem.workLocation?.name);
+                    }}
                     style={{ cursor: 'pointer' }}
                     className="clickable-row"
                   >

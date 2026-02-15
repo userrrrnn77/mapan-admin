@@ -177,6 +177,32 @@
   letter-spacing: 0.5px;
 }
 
+.logout-icon-btn-payroll {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
+}
+
+.logout-icon-btn-payroll:hover {
+  background: #ff1a1a;
+  box-shadow: 0 6px 15px rgba(255, 77, 77, 0.5);
+}
+
+.textAreaPayroll {
+  background: var(--bg-main);
+  border: none;
+  border-radius: 10px;
+}
+
 /* TOMBOL LOGOUT BIAR GAK JELEK */
 .logout-icon-btn {
   background: #ff4d4d;
@@ -189,13 +215,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.5s linear;
   box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
 }
 
 .logout-icon-btn:hover {
+  transition: all 0.5s linear;
   background: #ff1a1a;
-  transform: rotate(90deg); /* Animasi dikit biar asik */
   box-shadow: 0 6px 15px rgba(255, 77, 77, 0.5);
 }
 
@@ -517,4 +543,111 @@
 .modal-content::-webkit-scrollbar-thumb {
   background: var(--border-color);
   border-radius: 10px;
+}
+
+.burger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-main);
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  .burger-btn {
+    display: block;
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+  }
+  .admin-text-details {
+    display: none;
+  } /* Nama admin sembunyiin di HP biar gak sempit */
+}
+
+.sidebar {
+  width: 260px;
+  background: var(--bg-sidebar);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+  z-index: 1000;
+}
+.sidebar-logo {
+  padding: 30px 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.sidebar-nav {
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-nav a,
+.sidebar-logout-link {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 15px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: 0.3s;
+  background: transparent;
+  border: none;
+  width: 100%;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.sidebar-nav a:hover,
+.sidebar-logout-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+}
+
+.sidebar-nav a.active {
+  background: var(--white);
+  color: var(--primary);
+  font-weight: bold;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-logout-link {
+  color: #ffbaba;
+  margin-top: 10px;
+}
+.close-sidebar {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+}
+@media (max-width: 992px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  .close-sidebar {
+    display: block;
+    position: absolute;
+    right: 15px;
+    top: 30px;
+  }
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
 }

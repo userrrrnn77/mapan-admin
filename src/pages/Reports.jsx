@@ -27,6 +27,7 @@ const Reports = () => {
   const [showModal, setShowModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
   const fetchData = async () => {
     setLoading(true);
@@ -64,6 +65,10 @@ const Reports = () => {
   }, []);
 
   useEffect(() => {
+    setCurrentImgIndex(0);
+  }, [selectedImage]);
+
+  useEffect(() => {
     let filtered = dataRaw.filter((item) => item.type === tabAktif);
     if (searchTerm) {
       filtered = filtered.filter(
@@ -95,7 +100,7 @@ const Reports = () => {
 
   return (
     <>
-    {/* reports bre */}
+      {/* reports bre */}
       <Helmet>
         <title>Reports</title>
         <meta name="description" content="Laporan Karyawan" />
@@ -146,7 +151,7 @@ const Reports = () => {
                 <th>Waktu</th>
                 <th>User</th>
                 <th>Informasi / Barang</th>
-                <th>Status</th>
+
                 <th>Aksi</th>
               </tr>
             </thead>
@@ -159,7 +164,14 @@ const Reports = () => {
                 </tr>
               ) : dataFilter.length > 0 ? (
                 dataFilter.map((item) => (
-                  <tr key={item._id} className="clickable-row">
+                  <tr
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setShowModal(true);
+                    }}
+                    key={item._id}
+                    className="clickable-row"
+                  >
                     <td>
                       <div style={{ fontWeight: '600' }}>
                         {new Date(item.createdAt || item.requestTime).toLocaleDateString('id-ID')}
@@ -209,14 +221,14 @@ const Reports = () => {
                         </span>
                       </div>
                     </td>
-                    <td>
+                    {/* <td>
                       <span
                         className="loc-badge"
                         style={{ color: item.type === 'laporan' ? '#ef4444' : 'var(--primary)' }}
                       >
                         {item.status?.toUpperCase() || 'PENDING'}
                       </span>
-                    </td>
+                    </td> */}
                     <td>
                       <button
                         className="nav-icon-btn"
@@ -251,21 +263,29 @@ const Reports = () => {
               className="modal-content"
               style={{ width: '500px', padding: '0', overflow: 'hidden' }}
             >
-              {/* Header Image */}
+              {/* Preview Foto Utama */}
               <div
                 className="modal-image-header"
-                onClick={() => selectedItem.photos?.[0] && openImageZoom(selectedItem.photos[0])}
+                onClick={() =>
+                  selectedItem.photos?.[currentImgIndex] &&
+                  openImageZoom(selectedItem.photos[currentImgIndex])
+                }
                 style={{
-                  height: '200px',
+                  height: '250px',
                   background: '#f0f0f0',
                   position: 'relative',
-                  cursor: selectedItem.photos?.[0] ? 'zoom-in' : 'default',
+                  cursor: selectedItem.photos?.[currentImgIndex] ? 'zoom-in' : 'default',
                 }}
               >
-                {selectedItem.photos?.[0] ? (
+                {selectedItem.photos && selectedItem.photos.length > 0 ? (
                   <img
-                    src={selectedItem.photos[0]}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    src={selectedItem.photos[currentImgIndex]}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      transition: '0.3s',
+                    }}
                     alt="Bukti"
                   />
                 ) : (
@@ -283,6 +303,8 @@ const Reports = () => {
                     <p style={{ fontSize: '12px' }}>Tidak ada lampiran foto</p>
                   </div>
                 )}
+
+                {/* Tombol Close Modal di Pojok Gambar */}
                 <button
                   onClick={() => setShowModal(false)}
                   style={{
@@ -294,11 +316,52 @@ const Reports = () => {
                     borderRadius: '50%',
                     color: 'white',
                     padding: '5px',
+                    cursor: 'pointer',
                   }}
                 >
                   <X size={20} />
                 </button>
               </div>
+
+              {/* LIST THUMBNAIL (Kalau foto > 1) */}
+              {selectedItem.photos && selectedItem.photos.length > 1 && (
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '8px',
+                    padding: '10px 20px',
+                    background: 'var(--bg-card)',
+                    borderBottom: '1px solid var(--border-color)',
+                    overflowX: 'auto',
+                  }}
+                >
+                  {selectedItem.photos.map((img, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => setCurrentImgIndex(idx)}
+                      style={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '6px',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        border:
+                          currentImgIndex === idx
+                            ? '2px solid var(--primary)'
+                            : '2px solid transparent',
+                        flexShrink: 0,
+                        opacity: currentImgIndex === idx ? 1 : 0.6,
+                      }}
+                    >
+                      <img
+                        src={img}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        alt={`Thumb ${idx}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div style={{ padding: '20px' }}>
                 <div style={{ marginBottom: '15px' }}>
@@ -313,9 +376,10 @@ const Reports = () => {
                       {selectedItem.type === 'kebutuhan' ? 'Rincian Kebutuhan' : 'Detail Laporan'}
                     </h3>
                     <span className="loc-badge" style={{ fontSize: '10px' }}>
-                      {selectedItem.type.toUpperCase()}
+                      {selectedItem.type.toUpperCase()} ({selectedItem.photos?.length || 0} Foto)
                     </span>
                   </div>
+                  {/* ... Info User & Waktu tetap sama ... */}
                   <div
                     style={{
                       display: 'flex',
@@ -337,7 +401,7 @@ const Reports = () => {
                   </div>
                 </div>
 
-                {/* Box Info */}
+                {/* Box Deskripsi / Item Tetap Sama */}
                 <div
                   style={{
                     background: 'var(--bg-main)',
@@ -346,64 +410,30 @@ const Reports = () => {
                     padding: '15px',
                   }}
                 >
-                  <p
-                    style={{
-                      fontSize: '11px',
-                      fontWeight: 'bold',
-                      color: 'var(--primary)',
-                      marginBottom: '10px',
-                    }}
-                  >
-                    {selectedItem.type === 'kebutuhan' ? 'ITEM YANG DIMINTA:' : 'DESKRIPSI:'}
-                  </p>
-
+                  {/* ... (Logika render item kebutuhan atau deskripsi) ... */}
                   {selectedItem.type === 'kebutuhan' ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      {selectedItem.items?.map((it, idx) => (
-                        <div
-                          key={idx}
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            background: '#111c44',
-                            padding: '8px 12px',
-                            borderRadius: '6px',
-                            border: '1px solid var(--border-color)',
-                            fontSize: '14px',
-                            flexDirection: 'column',
-                            gap: '10px',
-                          }}
-                        >
-                          <span>{it}</span>
-                          <span style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
-                            {selectedItem.quantity?.[idx]}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                    selectedItem.items?.map((it, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          background: '#111c44',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          marginBottom: '5px',
+                        }}
+                      >
+                        <span>{it}</span>
+                        <span style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
+                          {selectedItem.quantity?.[idx]}
+                        </span>
+                      </div>
+                    ))
                   ) : (
                     <p style={{ fontSize: '14px', lineHeight: '1.5' }}>
                       {selectedItem.description}
                     </p>
-                  )}
-
-                  {selectedItem.notes && (
-                    <div
-                      style={{
-                        marginTop: '15px',
-                        borderTop: '1px dashed #ccc',
-                        paddingTop: '10px',
-                      }}
-                    >
-                      <p
-                        style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-muted)' }}
-                      >
-                        CATATAN:
-                      </p>
-                      <p style={{ fontSize: '13px', fontStyle: 'italic' }}>
-                        "{selectedItem.notes}"
-                      </p>
-                    </div>
                   )}
                 </div>
 

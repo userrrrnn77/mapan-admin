@@ -48,30 +48,6 @@ const Navbar = ({ pageTitle, onMenuClick }) => {
           </button>
         </div>
       </div>
-
-      <style jsx>{`
-        .burger-btn {
-          display: none;
-          background: none;
-          border: none;
-          color: var(--text-main);
-          margin-right: 15px;
-          cursor: pointer;
-        }
-
-        @media (max-width: 992px) {
-          .burger-btn {
-            display: block;
-          }
-          .nav-left {
-            display: flex;
-            align-items: center;
-          }
-          .admin-text-details {
-            display: none;
-          } /* Nama admin sembunyiin di HP biar gak sempit */
-        }
-      `}</style>
     </nav>
   );
 };

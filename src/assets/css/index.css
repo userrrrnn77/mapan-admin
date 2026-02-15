@@ -2,19 +2,27 @@
 @import './variables.css';
 @import './layout.css';
 @import './responsive.css';
+@import '../../pages//styles/attendance.css';
+@import '../../pages//styles/dashboard.css';
+@import '../../pages//styles/karyawan.css';
+@import '../../pages//styles/workLocation.css';
 
 /* Tambahin Reset Dasar biar rapi */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    color 0.4s ease,
+    box-shadow 0.4s ease;
 }
 
 body {
   font-family: 'Inter', sans-serif;
   background-color: var(--bg-main);
   color: var(--text-main);
-  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar {

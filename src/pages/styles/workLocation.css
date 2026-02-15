@@ -2,6 +2,11 @@
 .spin {
   animation: spin 1s linear infinite;
 }
+
+.worklocWrap {
+  background: var(--bg-sidebar);
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -30,7 +35,7 @@ input:focus {
   .worklocWrap {
     border-radius: 12px !important;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--bg-sidebar) !important;
   }
 
   /* Header Card (Nama Kantor & Button Maps) */
@@ -86,5 +91,68 @@ input:focus {
     padding: 8px !important;
     background: rgba(70, 48, 235, 0.1);
     border-radius: 8px;
+  }
+}
+
+/* Payroll Card Mode for Mobile */
+@media (max-width: 768px) {
+  /* Sembunyiin Header Tabel yang Horizontal */
+  .karyawan-table thead {
+    display: none;
+  }
+
+  .karyawan-table,
+  .karyawan-table tbody,
+  .karyawan-table tr,
+  .karyawan-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .karyawan-table tr {
+    background: var(--bg-card);
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px;
+    box-shadow: var(--shadow);
+  }
+
+  .karyawan-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+    padding: 10px 5px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  /* Baris pertama (Info Karyawan) jangan ada border top */
+  .karyawan-table td:first-child {
+    border-top: none;
+    justify-content: center; /* Karyawan di tengah biar cakep */
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 15px;
+  }
+
+  /* Trik nampilin Label di sebelah kiri pake pseudoelement */
+  .karyawan-table td::before {
+    content: attr(data-label); /* Ambil text dari attribute data-label */
+    float: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* Biar tombol Kelola Gaji full width di bawah card */
+  .karyawan-table td:last-child {
+    justify-content: center;
+  }
+
+  .karyawan-table td:last-child .btn-primary {
+    width: 50%;
+    justify-content: center;
   }
 }
