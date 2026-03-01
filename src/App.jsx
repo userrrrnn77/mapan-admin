@@ -100,7 +100,7 @@ function App() {
               <DashboardLayout title="Konfigurasi Lokasi">
                 <WorkLocation />
               </DashboardLayout>
-            </ProtectedRoute>
+            </ProtectedRoute>       
           }
         />
 

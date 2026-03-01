@@ -38,7 +38,7 @@ const Navbar = ({ pageTitle, onMenuClick }) => {
             </div>
             <div className="admin-text-details">
               <span className="admin-name">{userData?.name || 'Admin Mapan'}</span>
-              <span className="admin-role">{userData?.role || 'Administrator'}</span>
+              <span className="admin-role">{userData?.role || 'Administrator'}</span>   
             </div>
           </div>
 

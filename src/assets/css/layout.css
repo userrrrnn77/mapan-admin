@@ -45,6 +45,13 @@
   border: 1px solid var(--border-color);
 }
 
+.filter-container{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+}
+
 .breadcrumb {
   font-size: 14px;
   color: var(--text-muted);
@@ -302,6 +309,9 @@
   margin-bottom: 25px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;align-items: center;
 }
 .detail-profile img {
   width: 90px;
@@ -650,4 +660,9 @@
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
   }
+}
+
+.flexButton{
+    display: flex;
+    gap: 10px;
 }

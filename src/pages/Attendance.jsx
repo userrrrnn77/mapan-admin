@@ -82,7 +82,8 @@ const Attendance = () => {
       Tipe: item.type?.toUpperCase(),
       'Terlambat (Menit)': item.lateMinutes || 0,
       'Penalty (IDR)': item.penalty || 0,
-      Lokasi: item.workLocation === '69809101f786b25b5149e3d6' ? 'FEB Pleburan' : 'FEB Tembalang',
+      // Pake Snapshot kalo ada, kalo ga ada baru pake populated workLocation
+      Lokasi: item.locationSnapshot?.name || item.workLocation?.name || 'N/A',
     }));
 
     const totalPenalty = data.reduce((sum, item) => sum + (item.penalty || 0), 0);
@@ -209,11 +210,12 @@ const Attendance = () => {
                   <div className="info-card">
                     <label>Lokasi Presensi</label>
                     <p className="loc-text">
-                      <MapPin size={14} />{' '}
-                      {selectedItem.workLocation?.name || 'Lokasi Tidak Diketahui'}
+                      <MapPin size={14} /> {/* Logic: Snapshot > Populated Name > Default */}
+                      {selectedItem.locationSnapshot?.name ||
+                        selectedItem.workLocation?.name ||
+                        'Lokasi Tidak Diketahui'}
                     </p>
                     <small className="coords">
-                      {/* Sesuaikan dengan object location.lat di DB lu */}
                       {selectedItem.location?.lat}, {selectedItem.location?.lng}
                     </small>
                   </div>
@@ -378,7 +380,6 @@ const Attendance = () => {
                     key={item._id}
                     onClick={() => {
                       setSelectedItem(item);
-                      console.log(selectedItem.workLocation?.name);
                     }}
                     style={{ cursor: 'pointer' }}
                     className="clickable-row"
@@ -418,9 +419,7 @@ const Attendance = () => {
                     <td data-label="Lokasi">
                       <div className="location-tag">
                         <MapPin size={12} />
-                        {item.workLocation === '69809101f786b25b5149e3d6'
-                          ? 'FEB Pleburan'
-                          : 'FEB Tembalang'}
+                        {item.locationSnapshot?.name || item.workLocation?.name || 'Luar Area'}
                       </div>
                     </td>
                   </tr>

@@ -250,6 +250,12 @@
     flex: 1;
   }
 
+  tr.clickable-row td {
+    vertical-align: middle !important;
+    height: 60px; /* Atau sesuaikan dengan tinggi avatar lu */
+    padding: 12px 8px;
+  }
+
   /* Konten Data di Kanan */
   .user-td,
   .td-datetime,
@@ -262,7 +268,7 @@
     flex: 1.5 !important;
     display: flex !important;
     justify-content: flex-end !important;
-    align-items: center;
+    align-items: center !important;
     gap: 8px;
     font-size: 13px !important;
     white-space: normal !important;
@@ -284,7 +290,7 @@
 
   .btn-primary {
     order: 1;
-    width: 100% ;
+    width: 100%;
     justify-content: center !important;
     padding: 12px 20px !important;
   }
@@ -333,7 +339,6 @@
   .custom-table td::before {
     font-size: 12px !important;
   }
-
 }
 
 /* ===== UTILITIES, PRINT, & ACCESSIBILITY (Udah Full Bre) ===== */

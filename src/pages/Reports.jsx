@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import {
   ClipboardList,
   AlertOctagon,
-  ShoppingCart,
   Search,
   Eye,
   Image as ImageIcon,
   X,
   Clock,
   User,
-  Maximize2,
   CircleUserRound,
+  FileDown,
 } from 'lucide-react';
-import { getSemuaAktivitasApi, getSemuaLaporanApi, getSemuaKebutuhanApi } from '../api';
+import { getAllWorkLocationApi, getSemuaAktivitasApi, getSemuaLaporanApi } from '../api';
 import { Helmet } from 'react-helmet-async';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import toast from 'react-hot-toast';
 
 const Reports = () => {
   const [dataRaw, setDataRaw] = useState([]);
@@ -21,6 +23,7 @@ const Reports = () => {
   const [loading, setLoading] = useState(false);
   const [tabAktif, setTabAktif] = useState('laporan');
   const [searchTerm, setSearchTerm] = useState('');
+  const [getWorkLocation, setGetWorkLocation] = useState([]);
 
   // State Modal
   const [selectedItem, setSelectedItem] = useState(null);
@@ -29,30 +32,39 @@ const Reports = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
 
+  // Tambahin di barisan state atas
+  const [filterDivisi, setFilterDivisi] = useState('');
+  const [filterLocation, setFilterLocation] = useState('');
+
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [resAct, resRep, resNeed] = await Promise.all([
-        getSemuaAktivitasApi(),
-        getSemuaLaporanApi(),
-        getSemuaKebutuhanApi(),
-      ]);
+      const [resAct, resRep] = await Promise.all([getSemuaAktivitasApi(), getSemuaLaporanApi()]);
 
-      // Gabungin semua data & kasih tag 'type'
-      const gabungan = [
-        ...(resAct.data?.data || []).map((i) => ({ ...i, type: 'aktivitas' })),
-        ...(resRep.data?.data || []).map((i) => ({ ...i, type: 'laporan' })),
-        ...(resNeed.data?.data || []).map((i) => ({ ...i, type: 'kebutuhan' })),
-      ];
+      // 1. Mapping Aktivitas (Documentation: [{photo, caption}])
+      const actData = (resAct.data?.data || []).map((i) => ({
+        ...i,
+        type: 'aktivitas',
+        // Kita ratain biar modal tinggal pake .photos
+        photos: i.documentation?.map((doc) => doc.photo) || [],
+        // Simpan caption-nya juga biar bisa dipanggil di modal
+        captions: i.documentation?.map((doc) => doc.caption) || [],
+        displayDescription: i.title || 'Kegiatan Lapangan',
+        time: i.activityTime || i.createdAt,
+      }));
 
-      // Sortir berdasarkan waktu terbaru
-      const sorted = gabungan.sort((a, b) => {
-        const dateA = new Date(a.createdAt || a.requestTime);
-        const dateB = new Date(b.createdAt || b.requestTime);
-        return dateB - dateA;
-      });
+      // 2. Mapping Laporan (Photos: [String])
+      const repData = (resRep.data?.data || []).map((i) => ({
+        ...i,
+        type: 'laporan',
+        displayDescription: i.description,
+        time: i.reportTime || i.createdAt,
+      }));
 
-      setDataRaw(sorted);
+      // Gabungin & Sortir Terbaru
+      const gabungan = [...actData, ...repData].sort((a, b) => new Date(b.time) - new Date(a.time));
+
+      setDataRaw(gabungan);
     } catch (err) {
       console.error('Gagal tarik data log:', err);
     } finally {
@@ -60,37 +72,61 @@ const Reports = () => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const fetchDataLocation = async () => {
+    try {
+      const res = await getAllWorkLocationApi();
+      setGetWorkLocation(res.data.data);
+    } catch (error) {
+      toast.error('Gagal Ambil Data Master Lokasi');
+      console.log(error.message, 'Gagal Ambil Data Master Lokasi');
+    }
+  };
 
   useEffect(() => {
+    fetchData();
+    fetchDataLocation();
+  }, []);
+
+  // Logic filter data yang udah digabungin (dataRaw)
+  useEffect(() => {
+    let filtered = dataRaw.filter((item) => item.type === tabAktif);
+
+    if (filterDivisi) {
+      filtered = filtered.filter((item) => item.user?.division === filterDivisi);
+    }
+
+    if (filterLocation) {
+      filtered = filtered.filter((item) => item.user?.workLocation === filterLocation);
+    }
+
+    setDataFilter(filtered);
+  }, [tabAktif, dataRaw, filterDivisi, filterLocation]);
+
+  // Reset index gambar tiap ganti item modal
+  useEffect(() => {
     setCurrentImgIndex(0);
-  }, [selectedImage]);
+  }, [showModal, selectedItem]);
 
   useEffect(() => {
     let filtered = dataRaw.filter((item) => item.type === tabAktif);
     if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
       filtered = filtered.filter(
         (item) =>
-          item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (Array.isArray(item.items) &&
-            item.items.join(' ').toLowerCase().includes(searchTerm.toLowerCase())),
+          item.displayDescription?.toLowerCase().includes(searchLower) ||
+          item.user?.name?.toLowerCase().includes(searchLower) ||
+          item.address?.toLowerCase().includes(searchLower),
       );
     }
     setDataFilter(filtered);
   }, [tabAktif, dataRaw, searchTerm]);
 
   const getIcon = (type) => {
-    switch (type) {
-      case 'laporan':
-        return <AlertOctagon size={18} color="#ef4444" />;
-      case 'kebutuhan':
-        return <ShoppingCart size={18} color="var(--primary)" />;
-      default:
-        return <ClipboardList size={18} color="#10b981" />;
-    }
+    return type === 'laporan' ? (
+      <AlertOctagon size={18} color="#ef4444" />
+    ) : (
+      <ClipboardList size={18} color="#10b981" />
+    );
   };
 
   const openImageZoom = (img) => {
@@ -98,34 +134,188 @@ const Reports = () => {
     setShowImageModal(true);
   };
 
+  const handleExportMassal = async () => {
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    let yPos = 35;
+
+    // Header Laporan
+    pdf.setFontSize(16);
+    pdf.text('LAPORAN KEGIATAN LENGKAP', pageWidth / 2, 15, { align: 'center' });
+    pdf.setFontSize(10);
+    pdf.text(
+      `Filter: ${filterDivisi || 'Semua'} - ${filterLocation || 'Semua'}`,
+      pageWidth / 2,
+      22,
+      { align: 'center' },
+    );
+    pdf.line(10, 25, pageWidth - 10, 25);
+
+    for (let i = 0; i < dataFilter.length; i++) {
+      const item = dataFilter[i];
+
+      // Cek space halaman (biar gak kepotong)
+      if (yPos > 240) {
+        pdf.addPage();
+        yPos = 20;
+      }
+
+      // Judul & Info Kegiatan
+      pdf.setFont(undefined, 'bold');
+      pdf.setFontSize(10);
+      pdf.text(`${i + 1}. ${item.displayDescription}`, 10, yPos);
+      pdf.setFont(undefined, 'normal');
+      pdf.setFontSize(8);
+      pdf.text(
+        `User: ${item.user?.name || 'N/A'} | Tgl: ${new Date(item.time).toLocaleDateString()}`,
+        10,
+        yPos + 5,
+      );
+
+      yPos += 10;
+
+      // LOOPING SEMUA FOTO DALAM SATU KEGIATAN
+      let xPos = 10;
+      const imgWidth = 45;
+      const imgHeight = 35;
+
+      // ... (di dalam loop item, setelah xPos & yPos di-set)
+
+      if (item.photos && item.photos.length > 0) {
+        for (let p = 0; p < item.photos.length; p++) {
+          // Cek mentok kanan (Width: 45mm + Gap: 5mm)
+          if (xPos + 45 > pageWidth - 10) {
+            xPos = 10;
+            yPos += 45; // Turun lebih banyak karena ada space buat teks
+          }
+
+          // Cek mentok bawah (Halaman baru)
+          if (yPos > 240) {
+            pdf.addPage();
+            yPos = 20;
+          }
+
+          try {
+            // 1. Gambar Fotonya
+            const img = await loadImage(item.photos[p]);
+            pdf.addImage(img, 'JPEG', xPos, yPos, 45, 35);
+
+            // 2. Tambah Caption (Kalo ada)
+            if (item.captions && item.captions[p]) {
+              pdf.setFontSize(7);
+              pdf.setFont(undefined, 'italic');
+              // Kasih limit karakter biar gak nabrak foto sebelah
+              const shortCapt = item.captions[p].substring(0, 30);
+              pdf.text(shortCapt, xPos, yPos + 39); // Posisi y+39 (4mm di bawah foto)
+              pdf.setFont(undefined, 'normal');
+            }
+          } catch (e) {
+            pdf.rect(xPos, yPos, 45, 35);
+            pdf.text('Gagal Load', xPos + 2, yPos + 5);
+          }
+
+          xPos += 50; // Jarak horizontal ke foto berikutnya
+        }
+        yPos += 50; // Jarak vertical ke kegiatan berikutnya
+      }
+
+      pdf.line(10, yPos - 5, pageWidth - 10, yPos - 5); // Garis pemisah antar kegiatan
+      yPos += 5;
+    }
+
+    pdf.save(`Laporan_Lengkap_${new Date().getTime()}.pdf`);
+  };
+
+  // Helper buat bypass CORS canvas
+  const loadImage = (url) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = url;
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+    });
+  };
+
+  const toUpperCase = (role) => {
+    if (!role) return '';
+    return role.replace(/_/g, ' ').toUpperCase();
+  };
+
   return (
     <>
-      {/* reports bre */}
       <Helmet>
         <title>Reports</title>
         <meta name="description" content="Laporan Karyawan" />
       </Helmet>
       <div className="content-body">
         {/* Header */}
-        <div className="navbar" style={{ marginBottom: '20px' }}>
-          <div>
-            <div className="breadcrumb">Monitoring Lapangan</div>
-            <h2 className="page-title">Log Aktivitas & Laporan</h2>
-          </div>
-          <div className="search-box" style={{ maxWidth: '300px' }}>
-            <Search size={18} color="var(--text-muted)" />
-            <input
-              type="text"
-              placeholder="Cari user atau barang..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div className="navbar" style={{ marginBottom: '20px', alignItems: 'center' }}>
+          <h2 className="page-title">Log Aktivitas & Laporan</h2>
+
+          <div
+            className="filter-container"
+            // style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}
+          >
+            {/* Filter Divisi */}
+            <select
+              value={filterDivisi}
+              onChange={(e) => setFilterDivisi(e.target.value)}
+              style={{
+                padding: '14px',
+                borderRadius: '6px',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-card)',
+                color: 'var(--text-main)',
+              }}
+            >
+              <option style={{ padding: '10px' }} value="">
+                Semua Divisi
+              </option>
+              {[...new Set(getWorkLocation.map((item) => item.role))].map((roleUnik) => (
+                <option key={roleUnik} value={roleUnik}>
+                  {toUpperCase(roleUnik)}
+                </option>
+              ))}
+            </select>
+
+            {/* Filter Lokasi */}
+            <select
+              value={filterLocation}
+              onChange={(e) => setFilterLocation(e.target.value)}
+              style={{
+                padding: '14px',
+                borderRadius: '6px',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-card)',
+                color: 'var(--text-main)',
+              }}
+            >
+              <option value="">Semua Lokasi</option>
+              {getWorkLocation.map((loc) => (
+                <option key={loc._id} value={loc.code}>
+                  {loc.name}
+                </option>
+              ))}
+            </select>
+
+            {/* Tombol Export Massal */}
+            {/* jika tab aktivitas maka ada export kalo tab laporan gada bre */}
+            {tabAktif === 'aktivitas' && (
+              <button
+                className="btn-danger"
+                onClick={handleExportMassal}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}
+              >
+                <FileDown size={18} /> Export PDF
+              </button>
+            )}
           </div>
         </div>
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-          {['aktivitas', 'laporan', 'kebutuhan'].map((t) => (
+          {['aktivitas', 'laporan'].map((t) => (
             <button
               key={t}
               onClick={() => setTabAktif(t)}
@@ -150,15 +340,14 @@ const Reports = () => {
               <tr>
                 <th>Waktu</th>
                 <th>User</th>
-                <th>Informasi / Barang</th>
-
+                <th>Informasi</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', padding: '50px' }}>
+                  <td colSpan="4" style={{ textAlign: 'center', padding: '50px' }}>
                     Loading data...
                   </td>
                 </tr>
@@ -174,11 +363,10 @@ const Reports = () => {
                   >
                     <td>
                       <div style={{ fontWeight: '600' }}>
-                        {new Date(item.createdAt || item.requestTime).toLocaleDateString('id-ID')}
+                        {new Date(item.time).toLocaleDateString('id-ID')}
                       </div>
                       <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                        {new Date(item.createdAt || item.requestTime).toLocaleTimeString('id-ID')}{' '}
-                        WIB
+                        {new Date(item.time).toLocaleTimeString('id-ID')} WIB
                       </div>
                     </td>
                     <td>
@@ -213,30 +401,12 @@ const Reports = () => {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         {getIcon(item.type)}
                         <span className="truncate" style={{ maxWidth: '250px' }}>
-                          {item.type === 'kebutuhan'
-                            ? item.items
-                                ?.map((it, idx) => `${it} (${item.quantity?.[idx] || '?'})`)
-                                .join(', ')
-                            : item.description}
+                          {item.displayDescription}
                         </span>
                       </div>
                     </td>
-                    {/* <td>
-                      <span
-                        className="loc-badge"
-                        style={{ color: item.type === 'laporan' ? '#ef4444' : 'var(--primary)' }}
-                      >
-                        {item.status?.toUpperCase() || 'PENDING'}
-                      </span>
-                    </td> */}
                     <td>
-                      <button
-                        className="nav-icon-btn"
-                        onClick={() => {
-                          setSelectedItem(item);
-                          setShowModal(true);
-                        }}
-                      >
+                      <button className="nav-icon-btn">
                         <Eye size={16} style={{ color: 'white' }} />
                       </button>
                     </td>
@@ -245,7 +415,7 @@ const Reports = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="5"
+                    colSpan="4"
                     style={{ textAlign: 'center', padding: '50px', color: 'var(--text-muted)' }}
                   >
                     Tidak ada data ditemukan.
@@ -263,7 +433,7 @@ const Reports = () => {
               className="modal-content"
               style={{ width: '500px', padding: '0', overflow: 'hidden' }}
             >
-              {/* Preview Foto Utama */}
+              {/* Preview Foto */}
               <div
                 className="modal-image-header"
                 onClick={() =>
@@ -280,12 +450,7 @@ const Reports = () => {
                 {selectedItem.photos && selectedItem.photos.length > 0 ? (
                   <img
                     src={selectedItem.photos[currentImgIndex]}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      transition: '0.3s',
-                    }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     alt="Bukti"
                   />
                 ) : (
@@ -303,8 +468,6 @@ const Reports = () => {
                     <p style={{ fontSize: '12px' }}>Tidak ada lampiran foto</p>
                   </div>
                 )}
-
-                {/* Tombol Close Modal di Pojok Gambar */}
                 <button
                   onClick={() => setShowModal(false)}
                   style={{
@@ -323,7 +486,7 @@ const Reports = () => {
                 </button>
               </div>
 
-              {/* LIST THUMBNAIL (Kalau foto > 1) */}
+              {/* Thumbnails */}
               {selectedItem.photos && selectedItem.photos.length > 1 && (
                 <div
                   style={{
@@ -356,7 +519,7 @@ const Reports = () => {
                       <img
                         src={img}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        alt={`Thumb ${idx}`}
+                        alt="Thumb"
                       />
                     </div>
                   ))}
@@ -373,13 +536,12 @@ const Reports = () => {
                     }}
                   >
                     <h3 style={{ margin: 0 }}>
-                      {selectedItem.type === 'kebutuhan' ? 'Rincian Kebutuhan' : 'Detail Laporan'}
+                      {selectedItem.type === 'aktivitas' ? 'Detail Kegiatan' : 'Detail Laporan'}
                     </h3>
                     <span className="loc-badge" style={{ fontSize: '10px' }}>
                       {selectedItem.type.toUpperCase()} ({selectedItem.photos?.length || 0} Foto)
                     </span>
                   </div>
-                  {/* ... Info User & Waktu tetap sama ... */}
                   <div
                     style={{
                       display: 'flex',
@@ -393,15 +555,11 @@ const Reports = () => {
                       <User size={14} /> {selectedItem.user?.name || 'Karyawan'}
                     </span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Clock size={14} />{' '}
-                      {new Date(selectedItem.createdAt || selectedItem.requestTime).toLocaleString(
-                        'id-ID',
-                      )}
+                      <Clock size={14} /> {new Date(selectedItem.time).toLocaleString('id-ID')}
                     </span>
                   </div>
                 </div>
 
-                {/* Box Deskripsi / Item Tetap Sama */}
                 <div
                   style={{
                     background: 'var(--bg-main)',
@@ -410,31 +568,33 @@ const Reports = () => {
                     padding: '15px',
                   }}
                 >
-                  {/* ... (Logika render item kebutuhan atau deskripsi) ... */}
-                  {selectedItem.type === 'kebutuhan' ? (
-                    selectedItem.items?.map((it, idx) => (
-                      <div
-                        key={idx}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          background: '#111c44',
-                          padding: '8px 12px',
-                          borderRadius: '6px',
-                          marginBottom: '5px',
-                        }}
-                      >
-                        <span>{it}</span>
-                        <span style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
-                          {selectedItem.quantity?.[idx]}
+                  {selectedItem.type === 'aktivitas' ? (
+                    <>
+                      <h4 style={{ margin: '0 0 10px 0', color: 'var(--primary)' }}>
+                        {selectedItem.title}
+                      </h4>
+                      <p style={{ fontSize: '14px', margin: '0 0 10px 0', fontWeight: 'bold' }}>
+                        Caption Foto:{' '}
+                        <span style={{ color: 'var(--text-main)', fontWeight: 'normal' }}>
+                          {selectedItem.captions?.[currentImgIndex] || 'Tidak ada keterangan'}
                         </span>
-                      </div>
-                    ))
+                      </p>
+                    </>
                   ) : (
-                    <p style={{ fontSize: '14px', lineHeight: '1.5' }}>
+                    <p style={{ fontSize: '14px', lineHeight: '1.5', margin: '0 0 10px 0' }}>
                       {selectedItem.description}
                     </p>
                   )}
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      color: 'var(--text-muted)',
+                      borderTop: '1px solid var(--border-color)',
+                      paddingTop: '10px',
+                    }}
+                  >
+                    <strong>Lokasi:</strong> {selectedItem.address}
+                  </div>
                 </div>
 
                 <button
@@ -449,7 +609,7 @@ const Reports = () => {
           </div>
         )}
 
-        {/* --- LIGHTBOX IMAGE --- */}
+        {/* --- LIGHTBOX --- */}
         {showImageModal && (
           <div
             className="modal-overlay"
@@ -459,7 +619,7 @@ const Reports = () => {
             <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%' }}>
               <img
                 src={selectedImage}
-                style={{ width: 'auto', height: '90dvh', borderRadius: '8px' }}
+                style={{ width: 'auto', maxHeight: '90dvh', borderRadius: '8px' }}
                 alt="Zoom"
               />
               <button

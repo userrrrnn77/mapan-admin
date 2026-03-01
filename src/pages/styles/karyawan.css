@@ -175,3 +175,16 @@
   color: var(--text-muted);
   cursor: pointer;
 }
+
+.ShowPassword{
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.eyeIcon{
+    position: absolute;
+    right: 2.5%;
+    color: #0099ff;
+    cursor: pointer;
+}

@@ -7,15 +7,18 @@ import {
   Save,
   Clock,
   FileSpreadsheet,
+  Filter,
 } from 'lucide-react';
 import { getPayrollListApi, prosesPayrollApi, getAbsebsiApi, updatePayrollApi } from '../api';
 import { Helmet } from 'react-helmet-async';
 import * as XLSX from 'xlsx';
+import { formatRupiah } from '../utils/formatCurrency';
 
 const Payroll = () => {
   const [karyawan, setKaryawan] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [divisi, setDivisi] = useState('All');
   const [periode, setPeriode] = useState(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
@@ -35,7 +38,14 @@ const Payroll = () => {
 
   const [showSlip, setShowSlip] = useState(false);
 
+  // Fungsi cleaning text biar rapi di UI
+  const divisiToUppercase = (role) => {
+    if (!role) return '';
+    return role.replace(/_/g, ' ').toUpperCase();
+  };
+
   const getNominalAlpha = (hari, salary) => Math.round(Number(hari) * (Number(salary) / 26));
+
   const getNominalBPJS = (persen, salary) => {
     const basic = Number(salary);
     const salaryForKes = Math.min(basic, 12000000);
@@ -52,16 +62,10 @@ const Payroll = () => {
       const listKaryawan = resKaryawan.data?.data || resKaryawan.data;
 
       const [year, month] = periode.split('-').map(Number);
-
-      // SYARAT CLOP: Harus sama persis dengan Backend (Tanggal 1 s/d Akhir Bulan)
-      //   const startDate = new Date(year, month - 1, 1);
       const endDate = new Date(year, month, 0);
 
-      // Helper string YYYY-MM-DD yang benar
       const startStr = `${year}-${String(month).padStart(2, '0')}-01`;
       const endStr = `${year}-${String(month).padStart(2, '0')}-${String(endDate.getDate()).padStart(2, '0')}`;
-
-      //   console.log(`📅 Menarik Data Full Bulan ${periode}: ${startStr} s/d ${endStr}`);
 
       const resAbsensi = await getAbsebsiApi(startStr, endStr);
       const listAbsensi = resAbsensi.data.allAttendance || resAbsensi.data.data || [];
@@ -148,7 +152,6 @@ const Payroll = () => {
       });
 
       setShowEditModal(false);
-      setShowSlip(true);
       fetchKaryawanDanDataAbsen();
     } catch (err) {
       alert('Gagal simpan payroll, Bre!');
@@ -166,6 +169,7 @@ const Payroll = () => {
 
       return {
         'Nama Karyawan': u.name,
+        Divisi: divisiToUppercase(u.role),
         Periode: periode,
         'Gaji Pokok': u.basicSalary,
         'Total Telat (Min)': u.totalLateMinutes,
@@ -174,7 +178,6 @@ const Payroll = () => {
         'Denda Alpha': dendaAlpha,
         'Potongan BPJS': potonganBPJS,
         THP: thp,
-        Status: u.calculatedAlpha === 0 ? 'Full Masuk' : 'Ada Bolos',
       };
     });
 
@@ -184,6 +187,21 @@ const Payroll = () => {
     XLSX.writeFile(workbook, `Payroll_Mapan_${periode}.xlsx`);
   };
 
+  const getRoleStyle = (role) => {
+    switch (role) {
+      case 'cleaning_service':
+        return { bg: '#e0f2fe', text: '#0369a1' }; // Biru Muda
+      case 'customer_service':
+        return { bg: '#dcfce7', text: '#15803d' }; // Hijau
+      case 'gardener':
+        return { bg: '#fef9c3', text: '#a16207' }; // Kuning
+      case 'security':
+        return { bg: '#fee2e2', text: '#b91c1c' }; // Merah
+      default:
+        return { bg: '#f3f4f6', text: '#374151' }; // Abu-abu (Staf lain)
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -191,85 +209,134 @@ const Payroll = () => {
       </Helmet>
 
       <div className="karyawan-container">
-        {/* --- HEADER --- */}
         <div className="action-bar">
           <div className="search-box">
             <Search size={18} />
             <input
               type="text"
-              placeholder="Cari..."
+              placeholder="Cari Nama..."
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <div className="custom-input-group">
-            <button className="btn-export" onClick={handleExportExcel} title="Export ke Excel">
-              <FileSpreadsheet size={16} />
-              <span>Export Excel</span>
-            </button>
+          <div className="period-picker">
+            <Filter size={18} color="var(--primary)" />
+            <select
+              value={divisi}
+              onChange={(e) => setDivisi(e.target.value)}
+              style={{
+                border: 'none',
+                background: 'transparent',
+                outline: 'none',
+                fontWeight: '600',
+                cursor: 'pointer',
+                color: 'var(--primary)',
+              }}
+            >
+              <option style={{ color: 'var(--primary)' }} value="All">
+                Semua Divisi
+              </option>
+              <option style={{ color: 'var(--primary)' }} value="cleaning_service">
+                {divisiToUppercase('cleaning_service')}
+              </option>
+              <option style={{ color: 'var(--primary)' }} value="customer_service">
+                {divisiToUppercase('customer_service')}
+              </option>
+              <option style={{ color: 'var(--primary)' }} value="gardener">
+                {divisiToUppercase('gardener')}
+              </option>
+              <option style={{ color: 'var(--primary)' }} value="security">
+                {divisiToUppercase('security')}
+              </option>
+              <option style={{ color: 'var(--primary)' }} value="karyawan">
+                STAF LAIN
+              </option>
+            </select>
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
+
+          <div style={{ display: 'flex', gap: '10px', color: 'var(--primary)' }}>
             <div className="period-picker">
               <Calendar size={18} color="var(--primary)" />
-              <input type="month" value={periode} onChange={(e) => setPeriode(e.target.value)} />
+              <input
+                style={{ color: 'var(--primary)' }}
+                type="month"
+                value={periode}
+                onChange={(e) => setPeriode(e.target.value)}
+              />
             </div>
+            <button className="btn-export" onClick={handleExportExcel}>
+              <FileSpreadsheet size={16} />
+              <span>Export</span>
+            </button>
           </div>
         </div>
 
-        {/* --- TABEL UTAMA --- */}
         <div className="table-wrapper">
           <table className="karyawan-table">
             <thead>
               <tr>
                 <th>Karyawan</th>
+                <th>Divisi</th>
                 <th>Gaji Pokok</th>
                 <th>Total Telat</th>
-                <th>Hari Kerja</th>
                 <th>Status</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               {karyawan
-                .filter((u) => u.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                .filter((u) => {
+                  const matchSearch = u.name.toLowerCase().includes(searchTerm.toLowerCase());
+                  const matchDivisi = divisi === 'All' ? true : u.role === divisi;
+                  return matchSearch && matchDivisi;
+                })
                 .map((user) => (
                   <tr key={user._id}>
-                    {/* data-label kosong biar avatar ditengah sesuai CSS lu */}
-                    <td data-label="">
+                    <td>
                       <div className="user-info">
                         <div className="user-avatar">{user.name.charAt(0)}</div>
                         <div className="user-name">{user.name}</div>
                       </div>
                     </td>
-
-                    <td data-label="Gaji Pokok">
-                      <strong style={{ color: '#10b981' }}>
-                        Rp {user.basicSalary?.toLocaleString('id-ID')}
-                      </strong>
+                    <td data-label="Divisi">
+                      {(() => {
+                        const style = getRoleStyle(user.role);
+                        return (
+                          <span
+                            className="role-badge"
+                            style={{
+                              backgroundColor: style.bg,
+                              color: style.text,
+                              padding: '4px 10px',
+                              borderRadius: '20px',
+                              fontSize: '11px',
+                              fontWeight: '700',
+                              display: 'inline-block',
+                            }}
+                          >
+                            {divisiToUppercase(user.role)}
+                          </span>
+                        );
+                      })()}
                     </td>
-
-                    {/* INI KUNCINYA BRE, HARUS ADA data-label="Total Telat" */}
+                    <td data-label="Gaji Pokok">
+                      <strong style={{ color: '#10b981' }}>{formatRupiah(user.basicSalary)}</strong>
+                    </td>
                     <td data-label="Total Telat">
                       <span style={{ color: '#ef4444', fontWeight: 'bold' }}>
-                        {user.totalLateMinutes} Menit
+                        {user.totalLateMinutes} Mnt
                       </span>
                     </td>
-
-                    <td data-label="Hari Kerja">{user.workingDaysInMonth} Hari</td>
-
                     <td data-label="Status">
                       <span
                         className={`status-pill ${user.calculatedAlpha === 0 ? 'active' : 'pending'}`}
                       >
-                        {user.calculatedAlpha === 0
-                          ? 'Full Masuk'
-                          : `${user.calculatedAlpha} Bolos`}
+                        {user.calculatedAlpha === 0 ? 'Full' : `${user.calculatedAlpha} Alpha`}
                       </span>
                     </td>
-
                     <td data-label="Aksi">
                       <button className="btn-primary" onClick={() => openManageModal(user)}>
-                        <Calculator size={16} /> <span>Kelola Gaji</span>
+                        <Calculator size={16} /> <span>Kelola</span>
                       </button>
                     </td>
                   </tr>
@@ -278,7 +345,6 @@ const Payroll = () => {
           </table>
         </div>
 
-        {/* --- MODAL KELOLA GAJI --- */}
         {showEditModal && selectedUser && (
           <div className="modal-overlay">
             <div className="modal-content">
@@ -288,9 +354,8 @@ const Payroll = () => {
                   ×
                 </button>
               </div>
-
               <div className="content-body">
-                <div className="input-group" style={{ marginBottom: 15 }}>
+                <div className="input-group" style={{ marginBottom: '15px' }}>
                   <label>Gaji Pokok (Rp)</label>
                   <input
                     type="number"
@@ -338,18 +403,14 @@ const Payroll = () => {
                 >
                   <div className="input-group">
                     <label>Total Telat (Menit)</label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <input
-                        type="number"
-                        value={formData.totalMenitTelat}
-                        onChange={(e) =>
-                          setFormData({ ...formData, totalMenitTelat: e.target.value })
-                        }
-                        style={{ flex: 1 }}
-                      />
-                      <span style={{ fontSize: '12px' }}>Mnt</span>
-                    </div>
-                    <small style={{ color: '#ef4444', fontWeight: 'bold' }}>
+                    <input
+                      type="number"
+                      value={formData.totalMenitTelat}
+                      onChange={(e) =>
+                        setFormData({ ...formData, totalMenitTelat: e.target.value })
+                      }
+                    />
+                    <small style={{ color: '#ef4444' }}>
                       Denda: Rp{' '}
                       {(formData.totalMenitTelat * formData.hargaPerMenit).toLocaleString('id-ID')}
                     </small>
@@ -375,7 +436,14 @@ const Payroll = () => {
                   <textarea
                     value={formData.catatan}
                     onChange={(e) => setFormData({ ...formData, catatan: e.target.value })}
-                    style={{ height: '60px', resize: 'none' }}
+                    style={{
+                      height: '60px',
+                      resize: 'none',
+                      width: '100%',
+                      padding: '8px',
+                      borderRadius: '8px',
+                      border: '1px solid #ddd',
+                    }}
                   />
                 </div>
 
@@ -395,8 +463,8 @@ const Payroll = () => {
                       alignItems: 'center',
                     }}
                   >
-                    <span style={{ fontWeight: '600', fontSize: '12px' }}>Take Home Pay:</span>
-                    <strong style={{ fontSize: '18px', color: '#10b981' }}>
+                    <span style={{ fontWeight: '600' }}>Take Home Pay:</span>
+                    <strong style={{ fontSize: '20px', color: '#10b981' }}>
                       Rp {calculateTHP().toLocaleString('id-ID')}
                     </strong>
                   </div>
@@ -404,15 +472,27 @@ const Payroll = () => {
 
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <button
-                    className="logout-icon-btn-payroll"
-                    style={{ flex: 1 }}
+                    className="btn-danger"
+                    style={{
+                      flex: 1,
+                      padding: '10px',
+                      borderRadius: '8px',
+                    //   border: '1px solid #ddd',
+                    //   background: '#fff',
+                    }}
                     onClick={() => setShowEditModal(false)}
                   >
                     Batal
                   </button>
                   <button
                     className="btn-primary"
-                    style={{ flex: 2, justifyContent: 'center' }}
+                    style={{
+                      flex: 2,
+                      justifyContent: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
                     onClick={handleProcessAndSave}
                     disabled={loading}
                   >

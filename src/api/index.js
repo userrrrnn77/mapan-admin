@@ -22,6 +22,8 @@ export const getSemuaUserApi = () => api.get('/users');
 
 export const getUserByIdApi = (id) => api.get(`/users/${id}`);
 
+export const verifyUserApi = (userId, action) => api.patch(`/users/verify/${userId}`, { action }); // action: 'approve' atau 'reject'
+
 export const buatUserBaruApi = async (data) => {
   const res = await api.post('/users', data);
   return res.data; // Kita return res.data biar sesuai sama logic di Karyawan.jsx
@@ -30,7 +32,7 @@ export const buatUserBaruApi = async (data) => {
 export const updateStatusUserApi = (userId, status) =>
   api.patch(`/users/${userId}/status`, { status });
 
-export const updateRoleUserApi = (userId, role) => api.patch(`/users/${userId}/role`, { role });
+export const updateRoleUserApi = (userId, data) => api.patch(`/users/${userId}/role`, { data }); // ini bre update njir
 
 export const deleteUserById = (userId) => api.delete(`/users/${userId}`);
 
@@ -80,3 +82,5 @@ export const getSlipGajiApi = (userId, periode) =>
 // ===== LOKASI TUGAS =====
 export const getAllWorkLocationApi = () => api.get('/work-locations');
 export const updateWorkLocationApi = (id, data) => api.put(`/work-locations/${id}`, data);
+export const createLocation = (data) => api.post("/work-locations", data)
+export const deleteLocation = (id) => api.delete(`/work-locations/${id}`)

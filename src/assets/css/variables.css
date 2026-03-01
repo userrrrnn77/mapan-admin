@@ -27,6 +27,8 @@
   --scrollbar-track: #f1f1f1;
   --scrollbar-thumb: #c1c1c1;
   --scrollbar-thumb-hover: #a8a8a8;
+  --danger-color: #ff0e0e;
+  --danger-color-dark: #7d0f0f;
 }
 
 [data-theme='dark'] {
@@ -172,6 +174,25 @@
   background: var(--primary-dark);
 }
 
+.btn-danger {
+  background: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+  justify-content: center;
+}
+
+.btn-danger:hover{
+    background: var(--danger-color-dark);
+}
+
 /* 5. MODAL & SLIP PAYROLL */
 .modal-overlay {
   position: fixed;
@@ -235,4 +256,10 @@
   border-radius: 6px;
   font-size: 12px;
   border: 1px solid var(--border-color);
+}
+
+.roleWorkLocation{
+    display: flex;
+    padding-left: 5px;
+    text-transform: capitalize;
 }

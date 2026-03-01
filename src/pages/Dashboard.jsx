@@ -61,6 +61,8 @@ const Dashboard = () => {
       </div>
     );
 
+    console.log(laporanTerbaru.map((item) => item.user?.name || "User Not Found")) // ini kok null ya bre, kalo misal item.user.name malah cannot read name njir
+
   return (
     <>
       {/* dashboard bre */}
@@ -123,7 +125,7 @@ const Dashboard = () => {
                 laporanTerbaru.map((item) => (
                   <div key={item._id} className="feed-card">
                     <div className="feed-card-header">
-                      <span className="user-name">{item.user?.name || 'User'}</span>
+                      <span className="user-name">{item?.user?.name || 'User'}</span>
                       <span className="category-badge">
                         {item.status || item.type || 'Aktivitas'}
                       </span>

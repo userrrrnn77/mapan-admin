@@ -22,8 +22,6 @@ const Login = () => {
       const user = res.data?.user || res.data?.data?.user;
 
       if (token) {
-        localStorage.setItem('token', token);
-        localStorage.setItem('userData', JSON.stringify(user));
         login(token, user);
         navigate('/dashboard');
       }
@@ -67,8 +65,6 @@ const Login = () => {
         >
           <img
             src={backgroundLogin}
-            onLoad={() => console.log('Gambar Berhasil Load!')} // Cek di console log browser
-            onError={() => console.error('Gambar Gagal Load, Cek Path Bre!')}
             alt="bg"
             style={{
               width: '100%',

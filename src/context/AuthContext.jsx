@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     setUserToken(null);
     setUserData(null);
     localStorage.clear();
-    navigate('/login');
+    window.location.href = '/login';
   };
 
   const isLoggedIn = () => {

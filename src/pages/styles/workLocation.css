@@ -156,3 +156,104 @@ input:focus {
     justify-content: center;
   }
 }
+
+.roleShift {
+  display: flex;
+  justify-content: space-between;
+}
+
+.roleShiftGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.roleShiftGroupColum {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+}
+
+.shiftTitleClass {
+  padding: 5px 15px;
+  border-radius: 20px;
+  background: var(--bg-main);
+  font-size: 12px;
+}
+
+.shift-container {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg-main);
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.shift-day-section {
+  margin-bottom: 20px;
+  border-bottom: 1px dashed #444;
+  padding-bottom: 10px;
+}
+
+.shift-day-section h4 {
+  color: var(--primary); /* Hijau neon biar seger */
+  font-size: 14px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.shift-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr; /* Kolom: Nama Shift | Jam Masuk | Jam Pulang */
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.shift-label {
+  font-size: 12px;
+  color: var(--text-main);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.input-style-bre {
+  width: 100%;
+  padding: 6px 10px;
+  background: var(--bg-dropdown);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-main);
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.input-style-bre:focus {
+  border-color: var(--border-color);
+  outline: none;
+  box-shadow: 0 0 5px var(--shadow-dropdown);
+}
+
+.input-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  padding-left: 0;
+}
+
+.stylusBoy {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

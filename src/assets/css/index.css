@@ -1,11 +1,12 @@
 /* index.css */
+@import "tailwindcss";
 @import './variables.css';
 @import './layout.css';
 @import './responsive.css';
-@import '../../pages//styles/attendance.css';
-@import '../../pages//styles/dashboard.css';
-@import '../../pages//styles/karyawan.css';
-@import '../../pages//styles/workLocation.css';
+@import '../../pages/styles/attendance.css';
+@import '../../pages/styles/dashboard.css';
+@import '../../pages/styles/karyawan.css';
+@import '../../pages/styles/workLocation.css';
 
 /* Tambahin Reset Dasar biar rapi */
 * {
@@ -27,4 +28,12 @@ body {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.button-danger:hover{
+    background: #7a0808;
+}
+
+.Toastify__toast-container {
+  z-index: 99999 !important;
 }
