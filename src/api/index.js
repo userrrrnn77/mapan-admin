@@ -68,8 +68,9 @@ export const postKebutuhanApi = (data) => api.post('/needs', data);
 export const getPayrollListApi = () => api.get('/payroll/karyawan');
 
 // 2. Proses hitung awal (auto-calculate telat dll)
-export const prosesPayrollApi = (userId, periode) =>
-  api.post('/payroll/process', { userId, periode });
+export const prosesPayrollApi = (userId) => api.post('/payroll/process', { userId });
+
+export const prosesAllPayrollApi = () => api.post('/payroll/process-all');
 
 // 3. Update/Save manual adjustment (Bonus, Potongan, Status)
 // Ini yang bakal dipake buat "Save" setelah admin edit manual
@@ -82,5 +83,5 @@ export const getSlipGajiApi = (userId, periode) =>
 // ===== LOKASI TUGAS =====
 export const getAllWorkLocationApi = () => api.get('/work-locations');
 export const updateWorkLocationApi = (id, data) => api.put(`/work-locations/${id}`, data);
-export const createLocation = (data) => api.post("/work-locations", data)
-export const deleteLocation = (id) => api.delete(`/work-locations/${id}`)
+export const createLocation = (data) => api.post('/work-locations', data);
+export const deleteLocation = (id) => api.delete(`/work-locations/${id}`);

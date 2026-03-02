@@ -61,7 +61,7 @@ const Dashboard = () => {
       </div>
     );
 
-    console.log(laporanTerbaru.map((item) => item.user?.name || "User Not Found")) // ini kok null ya bre, kalo misal item.user.name malah cannot read name njir
+  console.log(laporanTerbaru.map((item) => item.user?.name || 'User Not Found')); // ini kok null ya bre, kalo misal item.user.name malah cannot read name njir
 
   return (
     <>
@@ -84,12 +84,6 @@ const Dashboard = () => {
             value={stats.laporanMasalah}
             icon={AlertOctagon}
             color="#EE5D50"
-          />
-          <StatBox
-            label="Kebutuhan Baru"
-            value={stats.kebutuhanBaru}
-            icon={ShoppingCart}
-            color="#FFB547"
           />
           <StatBox
             label="Absensi Hari Ini"
@@ -162,6 +156,7 @@ const StatBox = ({ label, value, icon: Icon, color }) => (
       gap: '18px',
       boxShadow: 'var(--shadow)',
       border: '1px solid var(--border-color)',
+      width: '100%',
     }}
   >
     <div style={{ background: `${color}15`, padding: '12px', borderRadius: '12px' }}>

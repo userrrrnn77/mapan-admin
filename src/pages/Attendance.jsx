@@ -216,7 +216,16 @@ const Attendance = () => {
                         'Lokasi Tidak Diketahui'}
                     </p>
                     <small className="coords">
-                      {selectedItem.location?.lat}, {selectedItem.location?.lng}
+                      {selectedItem.status === 'sakit' || selectedItem.status === 'izin' ? (
+                        <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>
+                          Lokasi disembunyikan (Privasi Medis)
+                        </span>
+                      ) : (
+                        <>
+                          📍 {selectedItem.location?.lat?.toFixed(4)},{' '}
+                          {selectedItem.location?.lng?.toFixed(4)}
+                        </>
+                      )}
                     </small>
                   </div>
                   <div className="info-row">
@@ -234,18 +243,25 @@ const Attendance = () => {
                   <div className="info-card">
                     <label>Lokasi Presensi</label>
                     <p className="loc-text">
-                      <MapPin size={14} /> {selectedItem.workLocation?.name || 'FEB Pleburan'}
+                      <MapPin size={14} />{' '}
+                      {selectedItem.locationSnapshot?.name ||
+                        selectedItem.workLocation?.name ||
+                        'Lokasi Tidak Diketahui'}
                     </p>
                     <small className="coords">
                       {selectedItem.latitude}, {selectedItem.longitude}
                     </small>
                   </div>
                   <div className="info-card">
-                    <label>Status Keterlambatan</label>
+                    <label>
+                      {selectedItem.status === 'sakit' ? 'Izin 🙏' : 'Status Keterlambatan'}
+                    </label>
                     <p>
-                      {selectedItem.lateMinutes > 0
-                        ? `${selectedItem.lateMinutes} Menit`
-                        : 'Tepat Waktu'}
+                      {selectedItem.status === 'sakit'
+                        ? 'Sakit'
+                        : selectedItem.lateMinutes > 0
+                          ? `${selectedItem.lateMinutes} Menit`
+                          : 'Tepat Waktu'}
                     </p>
                   </div>
                 </div>
@@ -405,10 +421,16 @@ const Attendance = () => {
                       <span className={`badge-type ${item.type}`}>{item.type?.toUpperCase()}</span>
                     </td>
                     <td data-label="Status">
-                      {item.lateMinutes > 0 ? (
+                      {item.status === 'sakit' || item.status === 'izin' ? (
+                        <span className={`status-${item.status}`}>
+                          {item.status === 'sakit' ? 'Sakit' : '📝 Izin'}
+                        </span>
+                      ) : item.lateMinutes > 0 ? (
                         <span className="status-late">
                           <Clock size={12} /> {item.lateMinutes}m
                         </span>
+                      ) : item.status === 'lembur' ? (
+                        <span className="status-overtime">🔥 Lembur</span>
                       ) : (
                         <span className="status-ontime">Tepat Waktu</span>
                       )}

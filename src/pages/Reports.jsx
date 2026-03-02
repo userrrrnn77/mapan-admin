@@ -16,6 +16,19 @@ import { Helmet } from 'react-helmet-async';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import toast from 'react-hot-toast';
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  ImageRun,
+  Table,
+  TableRow,
+  TableCell,
+  WidthType,
+  BorderStyle,
+} from 'docx';
+import { saveAs } from 'file-saver';
 
 const Reports = () => {
   const [dataRaw, setDataRaw] = useState([]);
@@ -226,6 +239,109 @@ const Reports = () => {
     pdf.save(`Laporan_Lengkap_${new Date().getTime()}.pdf`);
   };
 
+  const handleExportWord = async () => {
+    const loadingToast = toast.loading('Memproses Word... Tunggu bentar Bre!');
+
+    try {
+      const children = [
+        new Paragraph({
+          alignment: 'center',
+          children: [new TextRun({ text: 'LAPORAN KEGIATAN', bold: true, size: 32 })],
+        }),
+        new Paragraph({ text: '' }),
+      ];
+
+      // Pake for...of biar dia nungguin satu-satu (Gak bikin browser pusing)
+      for (const [index, item] of dataFilter.entries()) {
+        children.push(
+          new Paragraph({
+            spacing: { before: 200 },
+            children: [
+              new TextRun({
+                text: `${index + 1}. ${item.displayDescription}`,
+                bold: true,
+                size: 22,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `User: ${item.user?.name || 'N/A'} | ${new Date(item.time).toLocaleString('id-ID')}`,
+                size: 18,
+                color: '666666',
+              }),
+            ],
+          }),
+        );
+
+        if (item.photos && item.photos.length > 0) {
+          const rowCells = [];
+
+          for (const photoUrl of item.photos) {
+            try {
+              // INI KUNCI SAKTINYA: Ambil sebagai Blob
+              const response = await fetch(photoUrl);
+              if (!response.ok) throw new Error('Fetch gagal');
+              const blob = await response.blob();
+              const buffer = await blob.arrayBuffer();
+
+              rowCells.push(
+                new TableCell({
+                  width: { size: 33, type: WidthType.PERCENTAGE },
+                  children: [
+                    new Paragraph({
+                      children: [
+                        new ImageRun({
+                          data: buffer,
+                          transformation: { width: 160, height: 120 },
+                        }),
+                      ],
+                    }),
+                  ],
+                  borders: {
+                    top: { style: BorderStyle.NONE },
+                    bottom: { style: BorderStyle.NONE },
+                    left: { style: BorderStyle.NONE },
+                    right: { style: BorderStyle.NONE },
+                  },
+                }),
+              );
+            } catch (imgErr) {
+              console.error('Skip foto bermasalah:', imgErr);
+            }
+          }
+
+          // Bikin Grid (maksimal 3 foto sejajar)
+          if (rowCells.length > 0) {
+            const rows = [];
+            for (let i = 0; i < rowCells.length; i += 3) {
+              rows.push(new TableRow({ children: rowCells.slice(i, i + 3) }));
+            }
+            children.push(new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows }));
+          }
+        }
+
+        children.push(
+          new Paragraph({
+            text: '__________________________________________________',
+            color: 'E0E0E0',
+          }),
+        );
+      }
+
+      const doc = new Document({ sections: [{ children }] });
+      // Coba ganti Packer.toBuffer jadi Packer.toBlob kalo masih error
+      const blobDoc = await Packer.toBlob(doc);
+      saveAs(blobDoc, `Laporan_${Date.now()}.docx`);
+
+      toast.success('Word Berhasil! PDF lewat!', { id: loadingToast });
+    } catch (error) {
+      console.error('Detail Error:', error);
+      toast.error('Masih gagal Bre, cek console F12!', { id: loadingToast });
+    }
+  };
+
   // Helper buat bypass CORS canvas
   const loadImage = (url) => {
     return new Promise((resolve, reject) => {
@@ -301,15 +417,21 @@ const Reports = () => {
 
             {/* Tombol Export Massal */}
             {/* jika tab aktivitas maka ada export kalo tab laporan gada bre */}
-            {tabAktif === 'aktivitas' && (
-              <button
-                className="btn-danger"
-                onClick={handleExportMassal}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}
-              >
-                <FileDown size={18} /> Export PDF
-              </button>
-            )}
+
+            <button
+              className="btn-primary"
+              onClick={handleExportWord}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}
+            >
+              <FileDown size={18} /> Export WORD
+            </button>
+            <button
+              className="btn-danger"
+              onClick={handleExportMassal}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}
+            >
+              <FileDown size={18} /> Export PDF
+            </button>
           </div>
         </div>
 
